@@ -23,7 +23,7 @@ $convfactor = $FORM{convfactor};
 
 my $original = $numunits;
 $error = 0;
-
+$overallError = 0;
 
 
 #parsec <--> lightyear
@@ -76,24 +76,45 @@ elsif(($origunits eq "terrestrialminute") && ($convunits eq "terrestrialyear")){
 
 
 
-#output user's input
-#blue = valid
-#red = invalid
+#output user's input for ORINIGAL UNIT TYPE
 if(looks_like_number($origunits) || ($origunits eq "") || (choiceError($origunits) == 1)){
 	$error = 1;
+	$overallError = 1;
 }
 else{
 	$error = 0;
 }
 printInput($origunits, "Original Unit Type", $error);
 
+#output user's input for NEW UNIT TYPE
 if(looks_like_number($convunits) || ($convunits eq "") || (choiceError($convunits) == 1)){
 	$error = 1;
+	$overallError = 1;
 }
 else{
 	$error = 0;
 }
 printInput($convunits, "New Unit Type", $error);
+
+#output user's input for VALUE TO CONVERT
+if(!looks_like_number($numunits) || ($numunits eq "")){
+	$error = 1;
+	$overallError = 1;
+}
+else{
+	$error = 0;
+}
+printInput($numunits, "Value to Convert", $error);
+
+#output user's input for CONVERSING FACTOR
+if(!looks_like_number($convfactor) || ($convfactor eq "")){
+	$error = 1;
+	$overallError = 1;
+}
+else{
+	$error = 0;
+}
+printInput($convfactor, "Conversing Factor", $error);
 
 
 
@@ -103,7 +124,7 @@ printInput($convunits, "New Unit Type", $error);
 
 
 #if there are no errors, print conversion in green
-if($error == 0){
+if($overallError == 0){
 	print "<html><p style=\"color:green\">$original $origunits = $numunits $convunits</p></html>";
 }
 #if there are errors, call subroutines to determine and output specific error
