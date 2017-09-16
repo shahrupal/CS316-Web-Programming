@@ -10,7 +10,8 @@ my @values = split(/&/, $ENV{QUERY_STRING});
 foreach my $i (@values) {
 	my($fieldname, $data) = split(/=/, $i);
 	$FORM{$fieldname} = $data;
-	print "$fieldname = $data<br>\n";
+#######	print "$fieldname = $data<br>\n"; ########
+
 }
 
 #units in curly brackets are same as those in html file
@@ -23,29 +24,7 @@ $convfactor = $FORM{convfactor};
 my $original = $numunits;
 $error = 0;
 
-#if any of the required fields are blank, output error message
-if(($origunits eq "") || ($convunits eq "") || ($numunits eq "") || ($convfactor eq "")){
-	$error = 1;
-	print "<html><p style=\"color:red\">error: one or more fields are blank</p></html>";
-}
 
-#if any of the fields are given a wrong parameter type, output error message
-elsif(looks_like_number($origunits)){
-	$error = 1;
-	print "<html><p style=\"color:red\">error: original unit type field needs to be a string - instead, a numerical value was submitted</p></html>";
-}
-elsif(looks_like_number($convunits)){
-	$error = 1;
-	print "<html><p style=\"color:red\">error: new unit type field needs to be a string - instead, a numerical value was submitted</p></html>";
-}
-elsif(!looks_like_number($numunits)){
-	$error = 1;
-	print "<html><p style=\"color:red\">error: value to convert field needs to be a numerical value - instead, a string was submitted</p></html>";
-}
-elsif(!looks_like_number($convfactor)){
-	$error = 1;
-	print "<html>error: conversing factor field needs to be a numerical value - instead, a string was submitted</html>";
-}
 
 #parsec <--> lightyear
 if(($origunits eq "parsec") && ($convunits eq "lightyear")){
@@ -95,9 +74,62 @@ elsif(($origunits eq "terrestrialminute") && ($convunits eq "terrestrialyear")){
 	$numunits = $numunits/525600; 
 }
 
+
+if(looks_like_number($origunits) || ($origunits eq "") || (choiceError($origunits) == 1)){
+	$error = 1;
+	print "<html><p style=\"color:red\">Original Unit Type: $origunits</p></html>";
+}
+else{
+	print "<html><p style=\"color:blue\"Original Unit Type: $origunits</p></html>";
+}
+
+
+choiceError($origunits);
+
+#if there are no errors, print conversion in green
 if($error == 0){
 	print "<html><p style=\"color:green\">$original $origunits = $numunits $convunits</p></html>";
 }
+else{
+	dataTypeError($origunits, $convunits, $numunits, $convfactor);
+	if((choiceError($origunits) == 1) || (choiceError($convunits) == 1)){ 
+		print "<html><p style=\"color:red\">error: invalid units to be converted in red above</p></html>";
+	}
+}
+
+
 
 #default conversing factor = 1
-#at end of calculations, multiple $numunits by conversing factor
+#at end of calculations, muiltiple $numunits by conversing factor
+
+
+
+
+###SUBROUTINES###
+#checks to see if user entered invalid string
+sub choiceError{
+	my $option = shift;
+	if(($option ne "parsec") && ($option ne "lightyear") && ($option ne "kilometer") && ($option ne "xlarn") && ($option ne "galacticyear") && ($option ne "terrestrialyear") && ($option ne "xarnyear") && ($option ne "terrestrialminute")){
+		return 1;
+	}
+	else{
+		return 0;
+	}		
+}
+
+#checks to see if user enters wrong data type for parameters
+sub dataTypeError{
+	my $original = shift;
+	my $new = shift;
+	my $value = shift;
+	my $factor = shift;
+	if(looks_like_number($original) || looks_like_number($new) || !looks_like_number($value) || !looks_like_number($factor)){
+		print "<html><p style=\"color:red\">error: incorrect data type submitted for parameters in red above</p></html>";
+	}
+	else{
+		print "";
+	}
+}
+
+
+
