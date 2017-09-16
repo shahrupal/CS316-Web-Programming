@@ -1,4 +1,6 @@
 #!/usr/bin/perl
+use Scalar::Util qw(looks_like_number);
+
 print "Content-type: text/html\n\n";
 
 #splits multiple inputs into different strings
@@ -17,6 +19,13 @@ $origunits = $FORM{origunits};
 $convunits = $FORM{convunits};
 $numunits = $FORM{numunits};
 $convfactor = $FORM{convfactor};
+
+$error = 0;
+
+if(($origunits eq "") || ($convunits eq "") || ($numunits eq "") || ($convfactor eq "")){
+	$error = 1;
+	print "<html>error: one or more fields are blank</html>";
+}
 
 #parsec <--> lightyear
 if(($origunits eq "parsec") && ($convunits eq "lightyear")){
@@ -66,9 +75,15 @@ elsif(($origunits eq "terrestrialminute") && ($convunits eq "terrestrialyear")){
 	$numunits = $numunits/525600; 
 }
 
+#check to see if the required fields are empty
+#if(($origunits == "") || ($convunits == "") || ($numunits == "") || ($convfactor == "")){
+#	$error = 1;
+#	print "<html><font color="red">error: one or more fields are blank</font></html>"
+#}
 
-
-print "<html><h2>New = $numunits</h2></html>";
+if($error == 0){
+	print "<html><h2>New = $numunits</h2></html>";
+}
 
 #default conversing factor = 1
 #at end of calculations, multiple $numunits by conversing factor
