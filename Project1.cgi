@@ -10,8 +10,6 @@ my @values = split(/&/, $ENV{QUERY_STRING});
 foreach my $i (@values) {
 	my($fieldname, $data) = split(/=/, $i);
 	$FORM{$fieldname} = $data;
-#######	print "$fieldname = $data<br>\n"; ########
-
 }
 
 #units in curly brackets are same as those in html file
@@ -21,11 +19,14 @@ $convunits = $FORM{convunits};
 $numunits = $FORM{numunits};
 $convfactor = $FORM{convfactor};
 
+#create variables
 my $original = $numunits;
 $error = 0;
 $overallError = 0;
 $indirectConv = 0;
 
+
+#----------- DIRECT CONVERSIONS ----------#
 
 #parsec <--> lightyear
 if(($origunits eq "parsec") && ($convunits eq "lightyear")){
@@ -81,6 +82,7 @@ else{
 }
 
 
+#------------ OUTPUT USER'S INPUT -----------#
 
 #output user's input for ORINIGAL UNIT TYPE
 if(looks_like_number($origunits) || ($origunits eq "") || (choiceError($origunits) == 1)){
@@ -124,10 +126,7 @@ printInput($convfactor, "Conversing Factor", $error);
 
 
 
-
-
-
-
+#----------- OUTPUT ERRORS ----------#
 
 #if there are no errors, print conversion in green
 if($overallError == 0){
@@ -135,6 +134,8 @@ if($overallError == 0){
 		print "<html><p style=\"color:red\">error: this tool does not account for indirect conversions</p></html>";
 	}	
 	else{
+		#if there are absolutely no errors, multiply result by conversion factor
+		$numunits = $numunits*$convfactor;
 		print "<html><p style=\"color:green\">$original $origunits = $numunits $convunits</p></html>";
 	}
 }
@@ -154,16 +155,8 @@ else{
 
 
 
-#default conversing factor = 1
-#at end of calculations, muiltiple $numunits by conversing factor
+#------------ SUBROUTINES --------------#
 
-
-
-
-
-
-
-###SUBROUTINES###
 #checks to see if user entered invalid string
 sub choiceError{
 	my $option = shift;
