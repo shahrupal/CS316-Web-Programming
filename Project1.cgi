@@ -24,6 +24,7 @@ $convfactor = $FORM{convfactor};
 my $original = $numunits;
 $error = 0;
 $overallError = 0;
+$indirectConv = 0;
 
 
 #parsec <--> lightyear
@@ -72,6 +73,11 @@ elsif(($origunits eq "terrestrialyear") && ($convunits eq "terrestrialminute")){
 }
 elsif(($origunits eq "terrestrialminute") && ($convunits eq "terrestrialyear")){
 	$numunits = $numunits/525600; 
+}
+
+#no conversion - assume indirect
+else{
+	$indirectConv = 1;
 }
 
 
@@ -125,7 +131,12 @@ printInput($convfactor, "Conversing Factor", $error);
 
 #if there are no errors, print conversion in green
 if($overallError == 0){
-	print "<html><p style=\"color:green\">$original $origunits = $numunits $convunits</p></html>";
+	if($indirectConv == 1){
+		print "<html><p style=\"color:red\">error: this tool does not account for indirect conversions</p></html>";
+	}	
+	else{
+		print "<html><p style=\"color:green\">$original $origunits = $numunits $convunits</p></html>";
+	}
 }
 #if there are errors, call subroutines to determine and output specific error
 else{
@@ -135,6 +146,9 @@ else{
 	}
 	if(($origunits eq "") || ($convunits eq "") || ($numunits eq "") || ($convfactor eq "")){
 		print "<html><p style=\"color:red\">error: one or more of the required fields were left blank</p></html>";
+	}
+	if($indirectConv == 1){
+		print "<html><p style=\"color:red\">error: this tool does not account for indirect conversions</p></html>";
 	}
 }
 
@@ -167,7 +181,7 @@ sub dataTypeError{
 	my $new = shift;
 	my $value = shift;
 	my $factor = shift;
-	if(((looks_like_number($original)) && ($original ne "")) || ((looks_like_number($new)) && ($original ne "")) || ((!looks_like_number($value)) && ($origianl ne "")) || ((!looks_like_number($factor)) && ($original ne ""))){
+	if(((looks_like_number($original)) && ($original ne "")) || ((looks_like_number($new)) && ($new ne "")) || ((!looks_like_number($value)) && ($value ne "")) || ((!looks_like_number($factor)) && ($factor ne ""))){
 		print "<html><p style=\"color:red\">error: incorrect data type submitted for parameters in red above</p></html>";
 	}
 }
