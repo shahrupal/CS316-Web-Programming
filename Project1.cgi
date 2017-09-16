@@ -75,21 +75,38 @@ elsif(($origunits eq "terrestrialminute") && ($convunits eq "terrestrialyear")){
 }
 
 
+
+#output user's input
+#blue = valid
+#red = invalid
 if(looks_like_number($origunits) || ($origunits eq "") || (choiceError($origunits) == 1)){
 	$error = 1;
-	print "<html><p style=\"color:red\">Original Unit Type: $origunits</p></html>";
 }
 else{
-	print "<html><p style=\"color:blue\"Original Unit Type: $origunits</p></html>";
+	$error = 0;
 }
+printInput($origunits, "Original Unit Type", $error);
+
+if(looks_like_number($convunits) || ($convunits eq "") || (choiceError($convunits) == 1)){
+	$error = 1;
+}
+else{
+	$error = 0;
+}
+printInput($convunits, "New Unit Type", $error);
 
 
-choiceError($origunits);
+
+
+
+
+
 
 #if there are no errors, print conversion in green
 if($error == 0){
 	print "<html><p style=\"color:green\">$original $origunits = $numunits $convunits</p></html>";
 }
+#if there are errors, call subroutines to determine and output specific error
 else{
 	dataTypeError($origunits, $convunits, $numunits, $convfactor);
 	if((choiceError($origunits) == 1) || (choiceError($convunits) == 1)){ 
@@ -131,5 +148,16 @@ sub dataTypeError{
 	}
 }
 
-
+#print's user's input in red if invalid or blue if valid
+sub printInput{
+	$input = shift;
+	$variable = shift;
+	$color = shift;
+	if($color == 0){
+		print "<html><p style=\"color:blue\">$variable = $input</p></html>";
+	}
+	else{
+		print "<html><p style=\"color:red\">$variable = $input</p></html>";
+	}
+}
 
