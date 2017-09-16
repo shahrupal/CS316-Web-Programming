@@ -20,26 +20,27 @@ $convunits = $FORM{convunits};
 $numunits = $FORM{numunits};
 $convfactor = $FORM{convfactor};
 
+my $original = $numunits;
 $error = 0;
 
 #if any of the required fields are blank, output error message
 if(($origunits eq "") || ($convunits eq "") || ($numunits eq "") || ($convfactor eq "")){
 	$error = 1;
-	print "<html>error: one or more fields are blank</html>";
+	print "<html><p style=\"color:red\">error: one or more fields are blank</p></html>";
 }
 
 #if any of the fields are given a wrong parameter type, output error message
 elsif(looks_like_number($origunits)){
 	$error = 1;
-	print "<html>error: original unit type field needs to be a string - instead, a numerical value was submitted</html>";
+	print "<html><p style=\"color:red\">error: original unit type field needs to be a string - instead, a numerical value was submitted</p></html>";
 }
 elsif(looks_like_number($convunits)){
 	$error = 1;
-	print "<html>error: new unit type field needs to be a string - instead, a numerical value was submitted</html>";
+	print "<html><p style=\"color:red\">error: new unit type field needs to be a string - instead, a numerical value was submitted</p></html>";
 }
 elsif(!looks_like_number($numunits)){
 	$error = 1;
-	print "<html>error: value to convert field needs to be a numerical value - instead, a string was submitted</html>";
+	print "<html><p style=\"color:red\">error: value to convert field needs to be a numerical value - instead, a string was submitted</p></html>";
 }
 elsif(!looks_like_number($convfactor)){
 	$error = 1;
@@ -95,7 +96,7 @@ elsif(($origunits eq "terrestrialminute") && ($convunits eq "terrestrialyear")){
 }
 
 if($error == 0){
-	print "<html><h2>New = $numunits</h2></html>";
+	print "<html><p style=\"color:green\">$original $origunits = $numunits $convunits</p></html>";
 }
 
 #default conversing factor = 1
