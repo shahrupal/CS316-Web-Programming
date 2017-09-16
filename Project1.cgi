@@ -133,6 +133,9 @@ else{
 	if((choiceError($origunits) == 1) || (choiceError($convunits) == 1)){ 
 		print "<html><p style=\"color:red\">error: invalid units to be converted in red above</p></html>";
 	}
+	if(($origunits eq "") || ($convunits eq "") || ($numunits eq "") || ($convfactor eq "")){
+		print "<html><p style=\"color:red\">error: one or more of the required fields were left blank</p></html>";
+	}
 }
 
 
@@ -143,11 +146,14 @@ else{
 
 
 
+
+
+
 ###SUBROUTINES###
 #checks to see if user entered invalid string
 sub choiceError{
 	my $option = shift;
-	if(($option ne "parsec") && ($option ne "lightyear") && ($option ne "kilometer") && ($option ne "xlarn") && ($option ne "galacticyear") && ($option ne "terrestrialyear") && ($option ne "xarnyear") && ($option ne "terrestrialminute")){
+	if(($option ne "parsec") && ($option ne "lightyear") && ($option ne "kilometer") && ($option ne "xlarn") && ($option ne "galacticyear") && ($option ne "terrestrialyear") && ($option ne "xarnyear") && ($option ne "terrestrialminute") && ($option ne "")){
 		return 1;
 	}
 	else{
@@ -161,11 +167,8 @@ sub dataTypeError{
 	my $new = shift;
 	my $value = shift;
 	my $factor = shift;
-	if(looks_like_number($original) || looks_like_number($new) || !looks_like_number($value) || !looks_like_number($factor)){
+	if(((looks_like_number($original)) && ($original ne "")) || ((looks_like_number($new)) && ($original ne "")) || ((!looks_like_number($value)) && ($origianl ne "")) || ((!looks_like_number($factor)) && ($original ne ""))){
 		print "<html><p style=\"color:red\">error: incorrect data type submitted for parameters in red above</p></html>";
-	}
-	else{
-		print "";
 	}
 }
 
