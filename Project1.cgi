@@ -19,8 +19,9 @@ $convunits = $FORM{convunits};
 $numunits = $FORM{numunits};
 $convfactor = $FORM{convfactor};
 
+
 #create variables
-my $original = $numunits;
+$original = $numunits;
 $error = 0;
 $overallError = 0;
 $indirectConv = 0;
@@ -105,14 +106,15 @@ else{
 printInput($convunits, "New Unit Type", $error);
 
 #output user's input for VALUE TO CONVERT
-if(!looks_like_number($numunits) || ($numunits eq "")){
+#use "original" variable, since "numunits" has been manipulated
+if(!looks_like_number($original) || ($original eq "")){
 	$error = 1;
 	$overallError = 1;
 }
 else{
 	$error = 0;
 }
-printInput($numunits, "Value to Convert", $error);
+printInput($original, "Value to Convert", $error);
 
 #output user's input for CONVERSING FACTOR
 if(!looks_like_number($convfactor) || ($convfactor eq "")){
@@ -214,7 +216,4 @@ sub indirectError{
 	else{
 		return 1;	
 	}
-
-
-
 }
