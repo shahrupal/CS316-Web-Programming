@@ -148,7 +148,7 @@ else{
 	if(($origunits eq "") || ($convunits eq "") || ($numunits eq "") || ($convfactor eq "")){
 		print "<html><p style=\"color:red\">error: one or more of the required fields were left blank</p></html>";
 	}
-	if($indirectConv == 1){
+	if(indirectError($indirectConv) == 0){
 		print "<html><p style=\"color:red\">error: this tool does not account for indirect conversions</p></html>";
 	}
 }
@@ -192,3 +192,29 @@ sub printInput{
 	}
 }
 
+#print out if there's an indirect conversion error
+#returns 1 if "conversion error" is due to something else such as blank inputs
+#returns 0 if ACTUAL indirect conversion error
+sub indirectError{
+	$indConversion = shift;
+	$original = shift;
+	$new = shift;
+	if(($original eq "") || ($new eq "")){
+		return 1;
+	}
+	if(looks_like_number($original) || looks_like_number($new)){
+		return 1;
+	}
+	if((choiceError($original) == 1) || (choiceError($new) == 1)){
+		return 1;
+	}
+	if($indConversion == 1){
+		return 0;
+	}
+	else{
+		return 1;	
+	}
+
+
+
+}
