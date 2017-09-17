@@ -133,7 +133,7 @@ printInput($convfactor, "Conversing Factor", $error);
 #if there are no errors, print conversion in green
 if($overallError == 0){
 	if($indirectConv == 1){
-		print "<html><p style=\"color:red\">error: this tool does not account for indirect conversions</p></html>";
+		print "<html><p style=\"color:red\"><b>error: this tool does not account for indirect conversions</b></p></html>";
 	}	
 	else{
 		#if there are absolutely no errors, multiply result by conversion factor
@@ -145,13 +145,13 @@ if($overallError == 0){
 else{
 	dataTypeError($origunits, $convunits, $numunits, $convfactor);
 	if((choiceError($origunits) == 1) || (choiceError($convunits) == 1)){ 
-		print "<html><p style=\"color:red\">error: invalid units to be converted in red above</p></html>";
+		print "<html><p style=\"color:red\"><b>error: one or more of the types of units to be converted are invalid</b></p></html>";
 	}
 	if(($origunits eq "") || ($convunits eq "") || ($numunits eq "") || ($convfactor eq "")){
-		print "<html><p style=\"color:red\">error: one or more of the required fields were left blank</p></html>";
+		print "<html><p style=\"color:red\"><b>error: one or more of the required fields were left blank</b></p></html>";
 	}
 	if(indirectError($indirectConv) == 0){
-		print "<html><p style=\"color:red\">error: this tool does not account for indirect conversions</p></html>";
+		print "<html><p style=\"color:red\"><b>error: this tool does not account for indirect conversions</b></p></html>";
 	}
 }
 
@@ -177,7 +177,7 @@ sub dataTypeError{
 	my $value = shift;
 	my $factor = shift;
 	if(((looks_like_number($original)) && ($original ne "")) || ((looks_like_number($new)) && ($new ne "")) || ((!looks_like_number($value)) && ($value ne "")) || ((!looks_like_number($factor)) && ($factor ne ""))){
-		print "<html><p style=\"color:red\">error: incorrect data type submitted for parameters in red above</p></html>";
+		print "<html><p style=\"color:red\"><b>error: incorrect data type submitted for one or more of the fields</b></p></html>";
 	}
 }
 
