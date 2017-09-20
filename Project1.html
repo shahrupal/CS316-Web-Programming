@@ -3,8 +3,10 @@
 
 <head>
 
+<!--title that shows up on tab -->
 <title>Universal Web Converter</title>
 
+<!--adds background color of webppages and text of header text-->
 <style>
 body {background-color: powderblue;}
 h1 {color: maroon;}
@@ -13,13 +15,16 @@ h1 {color: maroon;}
 </head>
 
 <body>
+	<!--creates header of webpage-->
 	<center>
 	<h1>Universal Web Converter</h1>
 	</center>
 
-	<form action="http://www.cs.uky.edu/~rsh239/CS316/Project1.cgi">
+	<!--connects html file to cgi-->
+	<form action="http://www.cs.uky.edu/~rsh239/CS316/do_xelk.cgi">
         <center>
         
+	<!--creates drop-down list with following options-->
 	Original Unit Type:
 	<select name="origunits">
 		<option>parsec
@@ -33,6 +38,7 @@ h1 {color: maroon;}
 	</select>	
 	<br>	
 
+	<!--creates drop-down list with following options-->
 	New Unit Type:
         <select name="convunits">
 		<option>parsec
@@ -46,17 +52,19 @@ h1 {color: maroon;}
 	</select>
 	<br>
 
+	<!--creates textbox-->
         Value to Convert:
         <input type="text" name="numunits"><br>
 
+	<!--creates textbox-->
         Conversing Factor:
         <input type="text" name="convfactor" value=1><br>
 
+	<!--submit button-->
         <input type="submit" value="Translate">
         </center>
+
 </form>
-
-
 </body>
 </html>
 

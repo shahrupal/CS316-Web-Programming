@@ -1,5 +1,14 @@
 #!/usr/bin/perl
-use Scalar::Util qw(looks_like_number);
+use Scalar::Util qw(looks_like_number); #source: perldoc.perl.org/Scalar/Util.html
+
+my @values = split(/&/, $ENV{QUERY_STRING});
+
+#splits strings further so only input is left
+foreach my $i (@values) {
+        my($fieldname, $data) = split(/=/, $i);
+        $FORM{$fieldname} = $data;
+}
+
 
 print "Content-type: text/html\n\n";
 
@@ -21,10 +30,10 @@ $convfactor = $FORM{convfactor};
 
 
 #create variables
-$original = $numunits;
-$error = 0;
-$overallError = 0;
-$indirectConv = 0;
+$original = $numunits; #stores original value of numunits - mutation var can cause unexpected values
+$error = 0; #checks if error and uses it to set font color of parameters
+$overallError = 0; #checks if there is an error and uses it to set error messages
+$indirectConv = 0; #checks to see if conversions are invalid
 
 
 #----------- DIRECT CONVERSIONS ----------#
@@ -86,6 +95,7 @@ else{
 #------------ OUTPUT USER'S INPUT -----------#
 
 #output user's input for ORINIGAL UNIT TYPE
+#check if there is an error - use this to set color of output text
 if(looks_like_number($origunits) || ($origunits eq "") || (choiceError($origunits) == 1)){
 	$error = 1;
 	$overallError = 1;
@@ -96,6 +106,7 @@ else{
 printInput($origunits, "Original Unit Type", $error);
 
 #output user's input for NEW UNIT TYPE
+#check if there is an error - use this to set color of output text
 if(looks_like_number($convunits) || ($convunits eq "") || (choiceError($convunits) == 1)){
 	$error = 1;
 	$overallError = 1;
@@ -106,6 +117,7 @@ else{
 printInput($convunits, "New Unit Type", $error);
 
 #output user's input for VALUE TO CONVERT
+#check if there is an error - use this to set color of output text
 #use "original" variable, since "numunits" has been manipulated
 if(!looks_like_number($original) || ($original eq "")){
 	$error = 1;
@@ -117,6 +129,7 @@ else{
 printInput($original, "Value to Convert", $error);
 
 #output user's input for CONVERSING FACTOR
+#check if there is an error - use this to set color of output text
 if(!looks_like_number($convfactor) || ($convfactor eq "")){
 	$error = 1;
 	$overallError = 1;
@@ -130,27 +143,29 @@ printInput($convfactor, "Conversing Factor", $error);
 
 #----------- OUTPUT ERRORS ----------#
 
-#if there are no errors, print conversion in green
 if($overallError == 0){
+	#if there are no errors EXCEPT indirect conversion, output error
+	#checks if no other errors bc the two choices could be strings but not any of the listed choices
+	#this prevents output of error when it is not solely due to indirect conversion of valid choices
 	if($indirectConv == 1){
 		print "<html><p style=\"color:red\"><b>error: this tool does not account for indirect conversions</b></p></html>";
 	}	
 	else{
-		#if there are absolutely no errors, multiply result by conversion factor
+		#if there are absolutely no errors, multiply result by conversion factor and print out answer in green
 		$numunits = $numunits*$convfactor;
 		print "<html><p style=\"color:green\">$original $origunits = $numunits $convunits</p></html>";
 	}
 }
 #if there are errors, call subroutines to determine and output specific error
 else{
-	dataTypeError($origunits, $convunits, $numunits, $convfactor);
+	dataTypeError($origunits, $convunits, $original, $convfactor);
 	if((choiceError($origunits) == 1) || (choiceError($convunits) == 1)){ 
 		print "<html><p style=\"color:red\"><b>error: one or more of the types of units to be converted are invalid</b></p></html>";
 	}
-	if(($origunits eq "") || ($convunits eq "") || ($numunits eq "") || ($convfactor eq "")){
+	if(($origunits eq "") || ($convunits eq "") || ($original eq "") || ($convfactor eq "")){
 		print "<html><p style=\"color:red\"><b>error: one or more of the required fields were left blank</b></p></html>";
 	}
-	if(indirectError($indirectConv) == 0){
+	if(indirectError($indirectConv,$origunits,$convunits) == 0){
 		print "<html><p style=\"color:red\"><b>error: this tool does not account for indirect conversions</b></p></html>";
 	}
 }
@@ -159,7 +174,7 @@ else{
 
 #------------ SUBROUTINES --------------#
 
-#checks to see if user entered invalid string
+#checks to see if user entered invalid string (string not included in below options)
 sub choiceError{
 	my $option = shift;
 	if(($option ne "parsec") && ($option ne "lightyear") && ($option ne "kilometer") && ($option ne "xlarn") && ($option ne "galacticyear") && ($option ne "terrestrialyear") && ($option ne "xarnyear") && ($option ne "terrestrialminute") && ($option ne "")){
@@ -195,7 +210,7 @@ sub printInput{
 }
 
 #print out if there's an indirect conversion error
-#returns 1 if "conversion error" is due to something else such as blank inputs
+#returns 1 if "conversion error" is due to something else such as blank inputs or invalid options
 #returns 0 if ACTUAL indirect conversion error
 sub indirectError{
 	$indConversion = shift;
