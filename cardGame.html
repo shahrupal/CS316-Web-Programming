@@ -45,6 +45,8 @@ var showDeckTopCard;  //stores output of new deck card
 var showEmptyCard = "<img src = '' width = '5' />";  //shows nothing -- use to "remove" card from hand
 var cardToDiscard;  //store card path that user wants to discard
 var mycard1, mycard2, mycard3;
+var playerSum;
+var card1val, card2val, card3val;  //used in calculateScore function
 
 shuffle();   // start with new deal
 // shuffle
@@ -183,12 +185,14 @@ function SelectCard() {
 		playerHandChoice = this.id;
 		cardToDiscard = mycard1;
 	}
+
 	if(this.id === "pc2"){
 		playerHandChoice = this.id;
 		cardToDiscard = mycard2;
 	}
+
 	if(this.id === "pc3"){
-		playerHandChoide = this.id;
+		playerHandChoice = this.id;
 		cardToDiscard = mycard3;
 	}
 
@@ -205,7 +209,70 @@ function newDeckCard(){
 	
 }
 
+function calculateScore(card1, card2, card3){
 
+	//cardNum = number 1-40
+	//cardNumval = number 1-10
+
+
+	//store actual values of each card
+	//if card num is multiple of 10, the modulus of that will be 0 - be sure to set it to 10 instead of 0
+	card1val = card1 % 10;
+	if(card1val === 0){
+		card1val = 10;	
+	}
+	
+	card2val = card2 % 10;
+	if(card2val === 0){
+		card2val = 10;
+	}
+
+	card3val = card3 % 10;
+	if(card3val === 0){
+		card3val = 10;
+	}
+
+	playerSum = card1val + card2val + card3val;  //only account for sum
+
+	//TO DO: ADD OTHER RULES WHEN COMPUTING SCORE
+
+}
+
+
+//replace hand card of image from either deck or pile (whichever user chose) - this will help when calculating
+function updateUserCards(){
+	
+	if(deckPileChoice === "deck"){
+		if(playerHandChoice === "pc1"){
+			mycard1 = showDeckTopCard;  //actual image path
+			playerhand[0] = deckTopCard;  //number of card
+		}
+		if(playerHandChoice === "pc2"){
+			mycard2 = showDeckTopCard;	
+			playerhand[1] = deckTopCard;
+		}
+		if(playerHandChoice === "pc3"){
+			mycard3 = showDeckTopCard;
+			playerhand[2] = deckTopCard;
+		}
+	}
+
+	if(deckPileChoice === "discard"){
+		if(playerHandChoice === "pc1"){
+			mycard1 = showpile;
+			playerhand[0] = discarded;
+		}
+		if(playerHandChoice === "pc2"){
+			mycard2 = showpile;
+			playerhand[1] = discarded;
+		}
+		if(playerHandChoice === "pc3"){
+			mycard3 = showpile;
+			playerhand[2] = discarded;
+		}
+	}
+
+}
 
 // Main function.  It should follow the steps in the requirements.
 // RIGHT NOW, it only deals cards as an example.
@@ -253,6 +320,7 @@ function start() {
 			disableHandClick();
 				
 			if(deckPileChoice === "discard"){
+					
 				document.getElementById(playerHandChoice).innerHTML = showpile;
 			}
 			else if(deckPileChoice === "deck"){
@@ -260,23 +328,21 @@ function start() {
 				newDeckCard();
 			}
 			
-			
 			document.getElementById("discard").innerHTML = cardToDiscard;
-						
-//			document.getElementById(playerHandChoice).innerHTML = showEmptyCard; 
+			
+			updateUserCards();	
+			calculateScore(playerhand[0], playerhand[1], playerhand[2]);  //calculate user's score		
+				
+			console.log("card1: " + playerhand[0] + ", card2: " + playerhand[1] + ", card3: " + playerhand[2]);
+			console.log("SCORE: " + playerSum);
 			
 		}
-				
 
-		//TO DO:
-		//add final card to player's hand
-		//change directions - click card from hand, then click here when done
-		//disable deck/pile click
-		//endable player hand click
-		//when user clicks new instructions, remove last click from player's hand
+		//computer user's score
 		//computer's turn
-
 		//LOOP THROUGH THIS 3 TIMES
+
+		//THEN LOOK THROUGH THIS 5 TIMES HAI HAI HAI
 
 	}
 }
