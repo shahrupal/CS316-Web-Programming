@@ -111,10 +111,13 @@ function newcard(cards) {
 
 //disable user to click the deck or pile
 function disableDeckPileClick() {
-	theDeck = document.getElementById("xxxx");
-	thePile = document.getElementById("yyyy");
+	theDeck = document.getElementById("deck");
+	thePile = document.getElementById("discard");
 
 	// something needs to go here.
+	theDeck.onclick = null;
+	thePile.onclick = null;
+
 
 }
 
@@ -183,8 +186,10 @@ function start() {
 	
 	//when user clicks on directions, this will output what the last card they clicked was
 	document.getElementById("directions").onclick = function(){
+		
 		console.log("final choice: " + deckPileChoice);
-
+		disableDeckPileClick(); //don't allow user to click deck or pile after they've already chosen
+		document.getElementById("pc4").innerHTML = showpile;
 		//TO DO:
 		//add final card to player's hand
 		//change directions - click card from hand, then click here when done
