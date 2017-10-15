@@ -38,10 +38,13 @@ var hiddencard  = "<img src = '/~paul/cards/cardback.png' />";
 
 // Put other global variables here ***********************
 
-var playerHandChoice;
-var deckPileChoice;
-var deckTopCard;
-var showDeckTopCard;
+var playerHandChoice;  //stores user's last click of hand card
+var deckPileChoice;  //stores user's last click of deck/pile card
+var deckTopCard;  //stores new deck card
+var showDeckTopCard;  //stores output of new deck card
+var showEmptyCard = "<img src = '' width = '5' />";  //shows nothing -- use to "remove" card from hand
+var cardToDiscard;  //store card path that user wants to discard
+var mycard1, mycard2, mycard3;
 
 shuffle();   // start with new deal
 // shuffle
@@ -136,6 +139,21 @@ function enableDeckPileClick() {
 	console.log("End of enableNewcard()");
 }
 
+//disbale user from clicking cards in hand
+function disableHandClick(){
+	
+	handCard1 = document.getElementById("pc1");
+	handCard2 = document.getElementById("pc2");
+	handCard3 = document.getElementById("pc3");	
+	handCard4 = document.getElementById("pc4");
+
+	handCard1.onclick = null;
+	handCard2.onclick = null;
+	handCard3.onclick = null;
+	handCard4.onclick = null;		
+
+}
+
 //allows user to click cards in their hand
 function enableHandClick(){
 
@@ -143,7 +161,7 @@ function enableHandClick(){
         document.getElementById("pc1").onclick = SelectCard;
         document.getElementById("pc2").onclick = SelectCard;
         document.getElementById("pc3").onclick = SelectCard;
-
+	document.getElementById("pc4").onclick = SelectCard;
 
 }
 
@@ -154,15 +172,24 @@ function ignoreClick(what) {
 function SelectCard() {
 	console.log("beginning of SelectCard()");
 
-
+	//can manually set all cards to have white border, then keep line below this under those manual manipulations - should override
 	document.getElementById(this.id).style.border = "2px solid #42f450";
 
 	if(this.id === "discard" || this.id === "deck"){
 		deckPileChoice = this.id;
 	} 
 
-	if(this.id === "pc1" || this.id === "pc2" || this.id === "pc3"){
+	if(this.id === "pc1"){
 		playerHandChoice = this.id;
+		cardToDiscard = mycard1;
+	}
+	if(this.id === "pc2"){
+		playerHandChoice = this.id;
+		cardToDiscard = mycard2;
+	}
+	if(this.id === "pc3"){
+		playerHandChoide = this.id;
+		cardToDiscard = mycard3;
 	}
 
 	var whichCard = null;
@@ -177,6 +204,7 @@ function newDeckCard(){
 	showDeckTopCard = "<img src = '/~paul/cards/"+deckTopCard+".png' />";
 	
 }
+
 
 
 // Main function.  It should follow the steps in the requirements.
@@ -195,6 +223,7 @@ function start() {
 	//output directions
 	document.getElementById("directions").innerHTML = "Select a card from the deck or the discard pile. Click here when you have chosen.";
 	
+	disableHandClick();  //do not allow user to click on their hand
 	enableDeckPileClick(); //allow user to click on the deck or pile
 	
 	//when user clicks on directions, this will output what the last card they clicked was
@@ -203,7 +232,7 @@ function start() {
 		console.log("final choice: " + deckPileChoice);
 		disableDeckPileClick(); //don't allow user to click deck or pile after they've already chosen
 		
-		//add user's final choice to their hand
+/*		//add user's final choice to their hand
 		//remove chosen card from deck or pile (do this by creating new card)
 		if(deckPileChoice === "discard"){
 			document.getElementById("pc4").innerHTML = showpile;
@@ -214,9 +243,31 @@ function start() {
 			document.getElementById("pc4").innerHTML = showDeckTopCard;
 			newDeckCard();
 		}		
+*/			
+		document.getElementById("directions").innerHTML = "Select a card from your hand that you would like to discard. Click here when you have made your choice.";
+		enableHandClick();  //allow user to click on the cards in their hand
 		
-		document.getElementById("directions").innterHTML = "Select a card from your hand that you would like to discard.";
-		
+		//when user clicks on new directions, this will output what the last card (from their hand) that they clicked was
+		document.getElementById("directions").onclick = function(){
+			console.log("final choice: " + playerHandChoice); 
+			disableHandClick();
+				
+			if(deckPileChoice === "discard"){
+				document.getElementById(playerHandChoice).innerHTML = showpile;
+			}
+			else if(deckPileChoice === "deck"){
+				document.getElementById(playerHandChoice).innerHTML = showDeckTopCard;
+				newDeckCard();
+			}
+			
+			
+			document.getElementById("discard").innerHTML = cardToDiscard;
+						
+//			document.getElementById(playerHandChoice).innerHTML = showEmptyCard; 
+			
+		}
+				
+
 		//TO DO:
 		//add final card to player's hand
 		//change directions - click card from hand, then click here when done
@@ -263,10 +314,10 @@ function deal() {
 	document.getElementById("cc2").innerHTML = hiddencard;
 	document.getElementById("cc3").innerHTML = hiddencard;
 
-	var mycard1 = "<img src = '/~paul/cards/"+playerhand[0]+".png' />";
-	var mycard2 = "<img src = '/~paul/cards/"+playerhand[1]+".png' />";
-	var mycard3 = "<img src = '/~paul/cards/"+playerhand[2]+".png' />";
-	
+	mycard1 = "<img src = '/~paul/cards/"+playerhand[0]+".png' />";
+	mycard2 = "<img src = '/~paul/cards/"+playerhand[1]+".png' />";
+	mycard3 = "<img src = '/~paul/cards/"+playerhand[2]+".png' />";
+
 	document.getElementById("pc1").innerHTML = mycard1;
 	document.getElementById("pc2").innerHTML = mycard2;
 	document.getElementById("pc3").innerHTML = mycard3;
