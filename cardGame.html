@@ -40,6 +40,8 @@ var hiddencard  = "<img src = '/~paul/cards/cardback.png' />";
 
 var playerHandChoice;
 var deckPileChoice;
+var deckTopCard;
+var showDeckTopCard;
 
 shuffle();   // start with new deal
 // shuffle
@@ -168,6 +170,15 @@ function SelectCard() {
 	return;
 }
 
+//stores next card of deck
+function newDeckCard(){
+	
+	deckTopCard = shuffleddeck[decklocation++];
+	showDeckTopCard = "<img src = '/~paul/cards/"+deckTopCard+".png' />";
+	
+}
+
+
 // Main function.  It should follow the steps in the requirements.
 // RIGHT NOW, it only deals cards as an example.
 // You need to finish it.
@@ -179,17 +190,33 @@ function start() {
 	//overwrites what is shown on screen at first
 	document.getElementById("thePlayer").innerHTML = playerName;
 
-	deal();
+	deal(); //deal cards
 
+	//output directions
 	document.getElementById("directions").innerHTML = "Select a card from the deck or the discard pile. Click here when you have chosen.";
-	enableDeckPileClick();
+	
+	enableDeckPileClick(); //allow user to click on the deck or pile
 	
 	//when user clicks on directions, this will output what the last card they clicked was
 	document.getElementById("directions").onclick = function(){
 		
 		console.log("final choice: " + deckPileChoice);
 		disableDeckPileClick(); //don't allow user to click deck or pile after they've already chosen
-		document.getElementById("pc4").innerHTML = showpile;
+		
+		//add user's final choice to their hand
+		//remove chosen card from deck or pile (do this by creating new card)
+		if(deckPileChoice === "discard"){
+			document.getElementById("pc4").innerHTML = showpile;
+			//TO DO: FIGURE OUT HOW TO REMOVE CARD FROM DISCARD PILE FROM SHOWING - will be different first time
+
+		}
+		else if(deckPileChoice === "deck"){
+			document.getElementById("pc4").innerHTML = showDeckTopCard;
+			newDeckCard();
+		}		
+		
+		document.getElementById("directions").innterHTML = "Select a card from your hand that you would like to discard.";
+		
 		//TO DO:
 		//add final card to player's hand
 		//change directions - click card from hand, then click here when done
@@ -252,6 +279,8 @@ function deal() {
 	document.getElementById("discard").style.borderColor = "green";
 	document.getElementById("discard").style.borderWidth = "20px";
 	
+	deckTopCard = shuffleddeck[decklocation++];
+	showDeckTopCard = "<img src = '/~paul/cards/"+deckTopCard+".png' />";
 
 /**~~~~~~~~~~~~~~ EXAMPLE CODE ~~~~~~~~~~~~~**/
 
