@@ -61,7 +61,7 @@ var discardedNum;
 var discardedSuit;
 
 var dlcard1, dlcard2, dlcard3;
-var matchingSuit;
+var matchingSuit, matchingNum;
 
 shuffle();   // start with new deal
 // shuffle
@@ -407,17 +407,52 @@ function notMatchingSuit(){
 function notMatchingSuitImg(discard){
 	
 	var tempPath =  "<img src = '/~paul/cards/"+discard+".png' />";
-	if(notMatching() === compCard1){
+	if(notMatchingSuit() === compCard1){
 		dlcard1 = tempPath;
 	}
-	if(notMatching() === compCard2){
+	if(notMatchingSuit() === compCard2){
 		dlcard2 = tempPath;
 	}
-	if(notMatching() === compCard3){
+	if(notMatchingSuit() === compCard3){
 		dlcard3 = tempPath;
 	}
 
 }
+
+
+function notMatchingVal(){
+	
+	if(cc1val === cc2val){
+		matchingNum = cc1val;
+		return compCard3;
+	}
+	if(cc1val === cc3val){
+		matchingNum = cc3val;
+		return compCard2;
+	}
+	if(cc2val === cc3val){
+		matchingNum = cc2val;
+		return compCard1;
+	}
+}
+
+
+function notMatchingNumImg(discard){
+
+	var tempPath =  "<img src = '/~paul/cards/"+discard+".png' />";
+	if(notMatchingVal() === compCard1){
+		dlcard1 = tempPath;
+	}
+	if(notMatchingVal() === compCard2){
+		dlcard2 = tempPath;
+	}
+	if(notMatchingVal() === compCard3){
+		dlcard3 = tempPath;
+	}
+
+}
+
+
 
 //when two cards having matching suit, this outputs ???
 
@@ -526,6 +561,41 @@ function computerTurn(){
 		
 	}
 		
+		
+	//"if 2 cards are the same value, attempt to draw 3rd card of that suit"
+	else if((cc1val === cc2val) || (cc2val === cc3val) || (cc1val === cc3val){
+		if((cc1val === cc2val) && (cc2val === cc3val) && (cc1val === cc3val)){	
+			break; //do nothing
+		}
+
+		notMatchingVal();
+		if(discardedNum === matchingNum){
+			tempHolder = discarded;
+			discarded = notMatchingVal();
+			notMatchingVal() = tempHolder;
+			notMatchingValImg(tempHolder);
+			showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
+			document.getElementById("discard").innerHTML = showpile;
+		}
+		else{
+			if(deckNum === matchingNum){
+				discarded = notMatchingVal();
+				notMatchingVal() = deckTopCard;
+				notMatchingValImg(deckTopCard);
+				showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
+				document.getElementById("discard").innerHTML = showpile;
+				newDeckCard();
+			}
+			else{
+				discarded = deckTopCard;
+				showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
+				document.getElementById("discard").innerHTML = showpile;
+				newDeckCard();
+			}
+
+		}
+	}
+
 		//do same for rest of cards
 
 		//do same for deck
@@ -540,7 +610,7 @@ function computerTurn(){
 	
 
 		 
-	}		
+		
 	
 	
 	console.log("new computer hand: " + compCard1 + ", " + compCard2 + ", " + compCard3);
