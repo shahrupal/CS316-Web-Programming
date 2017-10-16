@@ -60,6 +60,9 @@ var handCount = 1;
 var discardedNum;
 var discardedSuit;
 
+var dlcard1, dlcard2, dlcard3;
+
+
 shuffle();   // start with new deal
 // shuffle
 // This is one way to create a shuffled deck
@@ -221,6 +224,12 @@ function newDeckCard(){
 	
 }
 
+function getDeckImage(deckNum){
+	showDeckTopCard = "<img src = '/~paul/cards/"+deckNum+".png' />";
+	console.log(showDeckTopCard);
+}
+
+
 function calculateScore(card1, card2, card3){
 
 	//cardNum = number 1-40 (includes suit)
@@ -338,6 +347,33 @@ function updateUserCards(){
 
 }
 
+function smallestCardVal(){
+
+	if((cc1val <= cc2val) && (cc1val <= cc3val)){
+		return compCard1;
+	}
+	else if((cc2val <= cc1val) && (cc2val <= cc3val)){
+		return compCard2;
+	}
+	else{
+		return compCard3;
+	}
+
+}
+
+//returns sets showpile = to smallest card value of computer hand
+function smallestCardImg(){
+
+	if(smallestCardVal() === compCard1){
+		showpile = dlcard1;
+	}
+	if(smallestCardVal() === compCard2){
+		showpile = dlcard2;
+	}
+	if(smallestCardVal() === compCard3){
+		showpile = dlcard3;
+	}
+}
 
 
 /** ~~~~~~~~~~~ COMPUTER'S TRUN ~~~~~~~~~~~~ **/
@@ -367,31 +403,67 @@ function computerTurn(){
 	discardedSuit = calculate(discarded, SUIT);
 	console.log("DISCARDED: " + discarded);
 
+	var deckNum = calculate(deckTopCard, VALUE);
+	var deckSuit = calculate(deckTopCard,SUIT);
+	
+	console.log("DECK CARD: " + deckNum + ", " + deckSuit);
+
+	var tempHolder;
+
 	//"if all 3 cards are the same suit, attempt to get a better card of the same suit"
 	//if discard pile has same suit, and number is greater than rest, swap
 	//if not, swap with deck pile
 	if((cc1suit === cc2suit) && (cc2suit === cc3suit)){
-		if((discardedSuit === cc1suit)){
-
-		}
+		if((discardedSuit === cc1suit) && (discardedum > cc1val) && (discardedNum > cc2val) && (discardedNum > cc3val)){ 
+			tempHolder = discarded; //swap discarded card and lowest card from hand
+			discarded = smallestCardVal();
+			smallestCardVal() = tempHolder;
+			smallestCardImg(); //mutates showpile to equal image of smallest card from hand
+			document.getElementById("discarded").innerHTML = showpile; 							
+			
+		}	
+		
+		else{
+			if(deckSuit === cc1suit) && (deckNum > cc1val) && (deckNum > cc2val) && (deckNum > cc3val)){
+				discarded = smallestCardVal();
+				smallestCardVal() = tempHolder;
+				smallestCardImg();
+				document.getElementById("discarded").innerHTML = showpile;
+			}
+			else{	
+				//IF COMP DOESN'T PICK UP DISCARD
+				//PICK UP DECK CARD, BUT IF DECK CARD IS SMALLEST, DISCARD IT
+				discarded = deckTopCard;
+				getDeckImage(deckTopCard);
+				document.getElementById("discard").innerHTML = showDeckTopCard;
+				newDeckCard();			
+			}
+		}		
 	}
 
-	//"if 2 cards are the same suit, attempt to draw a 3rd card of that suit"
-	else if((cc1suit === cc2suit) || (cc1suit === cc2suit) || (cc2suit === cc3suit)){
+/* this code works -- keep as a reference
+        console.log(deckTopCard);
+	discarded = deckTopCard;
+        getDeckImage(deckTopCard);
+        document.getElementById("discard").innerHTML = showDeckTopCard;
+	newDeckCard();
+	console.log("new deck card: " + deckTopCard);
+*/
 
-	}
-
-	//"if 2 cards are the same value, attempt to draw a 3rd card of that same value"
+	//if 2 cards are the same value, attempt to draw a 3rd card of that same value"
 	else if((cc1val === cc2val) || (cc1val === cc3val) || (cc2val === cc3val)){
 		
 	}		
 	
 	//"if 2 cards are in the set (ace,3,4), attempt to draw the 3rd card of the set"
 //	else if(){ }
-	//[this means 3 cards of different suits] "if the discard card is 8, 9, or 10 and matches one of our suits, choose it, discarding the lowest values card of the other 2 cards" -- "otherwise draw a new card, if it matches one of our suits, discard one of the other 2 cards with the lowest value. If it doesn't match, simply discard the lowest value card of the 4."
-	else if((cc1suit !== cc2suit) && (cc2suit !== cc3suit) && (cc1suit !== cc3suit)){
 
-	}
+	//[this means 3 cards of different suits] "if the discard card is 8, 9, or 10 and matches one of our suits, choose it, discarding the lowest values card of the other 2 cards" -- "otherwise draw a new card, if it matches one of our suits, discard one of the other 2 cards with the lowest value. If it doesn't match, simply discard the lowest value card of the 4."
+//	else if((cc1suit !== cc2suit) && (cc2suit !== cc3suit) && (cc1suit !== cc3suit)){
+
+//	}
+
+
 }
 
 /*function beginGame(){
@@ -509,9 +581,9 @@ function deal() {
 	var cardback = hiddencard;
 
 	//  card from same directory as the program/HTML/js file
-	var dlcard1 = "<img src = '/~paul/cards/"+computehand[0]+".png' />";
-	var dlcard2 = "<img src = '/~paul/cards/"+computehand[1]+".png' />";
-	var dlcard3 = "<img src = '/~paul/cards/"+computehand[2]+".png' />";
+	dlcard1 = "<img src = '/~paul/cards/"+computehand[0]+".png' />";
+	dlcard2 = "<img src = '/~paul/cards/"+computehand[1]+".png' />";
+	dlcard3 = "<img src = '/~paul/cards/"+computehand[2]+".png' />";
 
 	//  Do not actually display cards until hand is over!
 	//	document.getElementById("cc1").innerHTML = dlcard1;
