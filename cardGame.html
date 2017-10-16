@@ -325,7 +325,6 @@ function start() {
 			}
 			else if(deckPileChoice === "deck"){
 				document.getElementById(playerHandChoice).innerHTML = showDeckTopCard;
-				newDeckCard();
 			}
 			
 			document.getElementById("discard").innerHTML = cardToDiscard;
@@ -338,6 +337,9 @@ function start() {
 			
 		}
 
+
+		//newDeckCard() - may have a problem with it - not udating correctly?
+		//NEW DECK CARD BEFORE COMPUTER'S TURN
 		//computer user's score
 		//computer's turn
 		//LOOP THROUGH THIS 3 TIMES
