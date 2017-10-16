@@ -45,7 +45,7 @@ var showDeckTopCard;  //stores output of new deck card
 var showEmptyCard = "<img src = '' width = '5' />";  //shows nothing -- use to "remove" card from hand
 var cardToDiscard;  //store card path that user wants to discard
 var mycard1, mycard2, mycard3;
-var playerSum;
+var playerSum = 0;
 var card1val, card2val, card3val;  //used in calculateScore function
 
 shuffle();   // start with new deal
@@ -211,8 +211,8 @@ function newDeckCard(){
 
 function calculateScore(card1, card2, card3){
 
-	//cardNum = number 1-40
-	//cardNumval = number 1-10
+	//cardNum = number 1-40 (includes suit)
+	//cardNumval = number 1-10 (does not include suit)
 
 
 	//store actual values of each card
@@ -232,8 +232,45 @@ function calculateScore(card1, card2, card3){
 		card3val = 10;
 	}
 
-	playerSum = card1val + card2val + card3val;  //only account for sum
+//	playerSum = card1val + card2val + card3val;  //only account for sum
 
+	//earn 50 points if the three cards are of the same value
+	if((card1val === card2val) && (card2val === card3val)){
+		playerSum = playerSum + 50;
+	}	
+	//earn 40 points if the three cards are an ace, a two, and a three 
+	//earn 31 points if the three cards are an ace, a three, and a four
+	else if((card1val === 1) || (card2val === 1) || (card3val === 1)){
+		if((card1val === 3) || (card2val === 3) || (card3val === 3)){
+			if((card1val === 2) || (card2val === 2) || (card3val === 2)){	
+				playerSum = playerSum + 40;
+			}
+			else if((card1val === 4) || (card2val === 4) || (card3Val === 4)){
+				playerSum = playerSum + 31;
+			}
+		}
+	}
+	//earn sum of points when the three cards are the same suit
+	else{
+		 if(((0 < card1) && (card1 <= 10)) && ((0 < card2) && (card2 <= 10)) && ((0 < card3) && (card3 <= 10))){
+			playerSum += card1val + card2val + card3val;
+		}
+		else if(((11 <= card1) && (card1 <= 20)) && ((11 <= card2) && (card2 <= 20)) && ((11 <= card3) && (card3 <= 20))){ 
+			playerSum += card1val + card2val + card3val;
+		}
+		else if(((21 <= card1) && (card1 <= 30)) && ((21 <= card2) && (card2 <= 30)) && ((21 <= card3) && (card3 <= 30))){
+			playerSum += card1val + card2val + card3val;
+		}
+		else if(((31 <= card1) && (card1 <= 40)) && ((31 <= card2) && (card2 <= 40)) && ((31 <= card3) && (card3 <= 40))){
+			playerSum += card1val + card2val + card3val;
+		}
+	}
+
+
+	console.log("vales w/ suit: " + card1 + ", " + card2 + ", " + card3);
+	console.log("values w/ no suit: " + card1val + ", " + card2val + ", " + card3val);
+	console.log("(from function) score: " + playerSum);
+	
 	//TO DO: ADD OTHER RULES WHEN COMPUTING SCORE
 
 }
