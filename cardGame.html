@@ -267,11 +267,15 @@ function calculateScore(card1, card2, card3){
 	}
 
 
+	//output player's score
+	document.getElementById("playerscore").innerHTML = playerSum;
+
+	
+	/* ~~~~~~~~~~~~~~~~~~~ FOR TESTING PURPOSES ~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+			       // don't delete yet //
 	console.log("vales w/ suit: " + card1 + ", " + card2 + ", " + card3);
 	console.log("values w/ no suit: " + card1val + ", " + card2val + ", " + card3val);
 	console.log("(from function) score: " + playerSum);
-	
-	//TO DO: ADD OTHER RULES WHEN COMPUTING SCORE
 
 }
 
@@ -446,7 +450,7 @@ function deal() {
 
 // Example how to display on screen in textboxes
 	document.getElementById("computerscore").innerHTML ="1";
-	document.getElementById("playerscore").innerHTML ="2";
+//	document.getElementById("playerscore").innerHTML ="2";
 	
 //	document.getElementById("directions").innerHTML = "Select a new/discarded card";
 }
