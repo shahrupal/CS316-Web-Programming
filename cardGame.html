@@ -63,6 +63,9 @@ var discardedSuit;
 var dlcard1, dlcard2, dlcard3;
 var matchingSuit, matchingNum;
 
+
+var valNotContained;
+
 shuffle();   // start with new deal
 // shuffle
 // This is one way to create a shuffled deck
@@ -453,6 +456,62 @@ function notMatchingNumImg(discard){
 }
 
 
+//check if either of the three cards contain given requirement
+function cardsContain(c1, c2, c3, check){
+	
+	if((c1 === check) || (c2 === check) || (c3 === check)){
+		return true;
+	}
+	return false;
+}
+
+
+//returns card that does not contain a, b, or c
+function doesNotContain(a, b, c){
+
+	if(((cc1val === a) && (cc2val === b)) || ((cc1val === b) && (cc2val === c)) || ((cc1val === a) && (cc2val === c))){
+		return compCard3;
+	}
+        if(((cc2val === a) && (cc3val === b)) || ((cc2val === b) && (cc3val === c)) || ((cc2val === a) && (cc3val === c))){
+                return compCard1;
+        }	
+        if(((cc1val === a) && (cc3val === b)) || ((cc1val === b) && (cc3val === c)) || ((cc1val === a) && (cc3val === c))){
+                return compCard2;
+        }
+}
+
+
+//stores image of doesNotContain
+function doesNotContainImg(a,b,c,discard){
+	var tempPath = "<img src = '/~paul/cards/"+discard+".png' />";	
+	
+	if(doesNotContain(a,b,c) === compCard1){
+		dlcard1 = tempPath;
+	}
+	if(doesNotContain(a,b,c) === compCard2){
+		dlcard2 = tempPath;
+	}
+	if(doesNotContain(a,b,c) === compCard3){
+		dlcard3 = tempPath;
+	}
+}
+
+//check which value is missing
+function missingVal(c1,c2,c3,a,b,c){
+	if((c1 !== a) && (c2 !== a) && (c3 !== a)){
+		valNotContained = a;
+	}
+	else if((c1 !== b) && (c2 !== b) && (c3 !== b){
+		valNotContained = b;
+	}
+	else{
+		valNotContaied = c;
+	}
+	
+
+}
+
+
 
 //when two cards having matching suit, this outputs ???
 
@@ -563,10 +622,10 @@ function computerTurn(){
 		
 		
 	//"if 2 cards are the same value, attempt to draw 3rd card of that suit"
-	else if((cc1val === cc2val) || (cc2val === cc3val) || (cc1val === cc3val){
-		if((cc1val === cc2val) && (cc2val === cc3val) && (cc1val === cc3val)){	
-			break; //do nothing
-		}
+	else if((cc1val === cc2val) || (cc2val === cc3val) || (cc1val === cc3val)){
+//		if((cc1val === cc2val) && (cc2val === cc3val) && (cc1val === cc3val)){	
+//			break; //do nothing
+//		}
 
 		notMatchingVal();
 		if(discardedNum === matchingNum){
@@ -595,7 +654,42 @@ function computerTurn(){
 
 		}
 	}
+	
+	//"if 2 cards are in the set (ace, 2, 3), attempt to draw the 3rd card of the set"
+	else if((cardsContain(cc1val, cc2val, cc3val, 1) && cardsContain(cc1val, cc2val, cc3val, 2)) || (cardContains(cc1val, cc2val, cc3val, 2) && cardsContain(cc1val, cc2val, cc3val, 3)) || (cardsContain(cc1val, cc2val, cc3val, 1) && cardsContain(cc1val, cc2val, cc3val, 3))){
+		
+		doesNotContain(1, 2, 3);
+		missingVal(cc1val, cc2val, cc3val, 1, 2, 3);
+		if(cardContain(cc1val, cc2val, cc3val, 1) && cardsContain(cc1val, cc2val, cc3val, 2)){
+			if(discardedNum === valNotContained){
+				tempHolder = discarded;
+				discarded = doesNotContain(1,2,3);
+				doesNotContain(1,2,3) = tempHolder;
+				doesNotContainImg(1,2,3,tempHolder);
+				showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
+				document.getElementById("discard").innerHTML = showpile;
+				 
+			}
+			else{
+				if(deckNum === valNotContained){
+					discarded = doesNotContain(1,2,3);
+					doesNotContain(1,2,3) = deckTopCard;
+					doesNotContainImg(1,2,3,tempHolder);
+					showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
+					document.getElementById("discard").innerHTML = showpile;
+					newDeckCard();
+				}
+				else{
+					discrded = deckTopCard;
+					showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
+					document.getElementById("discard").innerHTML = showpile;
+					newDeckCard();
+					
+				} 
+			}
+		} 
 
+	}
 		//do same for rest of cards
 
 		//do same for deck
