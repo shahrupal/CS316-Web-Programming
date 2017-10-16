@@ -44,9 +44,21 @@ var deckTopCard;  //stores new deck card
 var showDeckTopCard;  //stores output of new deck card
 var showEmptyCard = "<img src = '' width = '5' />";  //shows nothing -- use to "remove" card from hand
 var cardToDiscard;  //store card path that user wants to discard
+var cardToDiscardNum;
 var mycard1, mycard2, mycard3;
 var playerSum = 0;
 var card1val, card2val, card3val;  //used in calculateScore function
+
+var compCard1, compCard2, compCard3;
+var cc1val, cc2val, cc3val;  //stores 1-10 (num of card)
+var cc1suit, cc2suit, cc3suit;  //stores 1-4 (suit of card)
+
+var winCount = 0;
+var gameCount = 1;
+var handCount = 1;
+
+var discardedNum;
+var discardedSuit;
 
 shuffle();   // start with new deal
 // shuffle
@@ -125,7 +137,6 @@ function disableDeckPileClick() {
 	theDeck.onclick = null;
 	thePile.onclick = null;
 
-
 }
 
 //allows user to click the deck or pile
@@ -184,6 +195,7 @@ function SelectCard() {
 	if(this.id === "pc1"){
 		playerHandChoice = this.id;
 		cardToDiscard = mycard1;
+		
 	}
 
 	if(this.id === "pc2"){
@@ -238,33 +250,34 @@ function calculateScore(card1, card2, card3){
 	if((card1val === card2val) && (card2val === card3val)){
 		playerSum = playerSum + 50;
 	}	
+
 	//earn 40 points if the three cards are an ace, a two, and a three 
 	//earn 31 points if the three cards are an ace, a three, and a four
-	else if((card1val === 1) || (card2val === 1) || (card3val === 1)){
+	if((card1val === 1) || (card2val === 1) || (card3val === 1)){
 		if((card1val === 3) || (card2val === 3) || (card3val === 3)){
 			if((card1val === 2) || (card2val === 2) || (card3val === 2)){	
 				playerSum = playerSum + 40;
 			}
-			else if((card1val === 4) || (card2val === 4) || (card3Val === 4)){
+			else if((card1val === 4) || (card2val === 4) || (card3val === 4)){
 				playerSum = playerSum + 31;
 			}
 		}
 	}
+	
 	//earn sum of points when the three cards are the same suit
-	else{
-		 if(((0 < card1) && (card1 <= 10)) && ((0 < card2) && (card2 <= 10)) && ((0 < card3) && (card3 <= 10))){
-			playerSum += card1val + card2val + card3val;
-		}
-		else if(((11 <= card1) && (card1 <= 20)) && ((11 <= card2) && (card2 <= 20)) && ((11 <= card3) && (card3 <= 20))){ 
-			playerSum += card1val + card2val + card3val;
-		}
-		else if(((21 <= card1) && (card1 <= 30)) && ((21 <= card2) && (card2 <= 30)) && ((21 <= card3) && (card3 <= 30))){
-			playerSum += card1val + card2val + card3val;
-		}
-		else if(((31 <= card1) && (card1 <= 40)) && ((31 <= card2) && (card2 <= 40)) && ((31 <= card3) && (card3 <= 40))){
-			playerSum += card1val + card2val + card3val;
-		}
+	if(((0 < card1) && (card1 <= 10)) && ((0 < card2) && (card2 <= 10)) && ((0 < card3) && (card3 <= 10))){
+		playerSum += card1val + card2val + card3val;
 	}
+	else if(((11 <= card1) && (card1 <= 20)) && ((11 <= card2) && (card2 <= 20)) && ((11 <= card3) && (card3 <= 20))){ 
+		playerSum += card1val + card2val + card3val;
+	}
+	else if(((21 <= card1) && (card1 <= 30)) && ((21 <= card2) && (card2 <= 30)) && ((21 <= card3) && (card3 <= 30))){
+		playerSum += card1val + card2val + card3val;
+	}
+	else if(((31 <= card1) && (card1 <= 40)) && ((31 <= card2) && (card2 <= 40)) && ((31 <= card3) && (card3 <= 40))){
+		playerSum += card1val + card2val + card3val;
+	}
+
 
 
 	//output player's score
@@ -286,48 +299,138 @@ function updateUserCards(){
 	if(deckPileChoice === "deck"){
 		if(playerHandChoice === "pc1"){
 			mycard1 = showDeckTopCard;  //actual image path
+			discarded = playerhand[0];  //number of new discarded card (num and suit)
 			playerhand[0] = deckTopCard;  //number of card
 		}
 		if(playerHandChoice === "pc2"){
 			mycard2 = showDeckTopCard;	
+			discarded = playerhand[1];
 			playerhand[1] = deckTopCard;
 		}
 		if(playerHandChoice === "pc3"){
 			mycard3 = showDeckTopCard;
+			discarded = playerhand[2];
 			playerhand[2] = deckTopCard;
 		}
 	}
-
+	
+	var temp;
 	if(deckPileChoice === "discard"){
 		if(playerHandChoice === "pc1"){
 			mycard1 = showpile;
-			playerhand[0] = discarded;
+			temp = discarded;
+			discarded = playerhand[0];  //this line and one below, swap card from hand and from discard pile
+			playerhand[0] = temp;
 		}
 		if(playerHandChoice === "pc2"){
 			mycard2 = showpile;
-			playerhand[1] = discarded;
+			temp = discarded;
+			discarded = playerhand[1];
+			playerhand[1] = temp;
 		}
 		if(playerHandChoice === "pc3"){
 			mycard3 = showpile;
-			playerhand[2] = discarded;
+			temp = discarded;
+			discarded = playerhand[2];
+			playerhand[2] = temp;
 		}
 	}
 
 }
+
+
+
+/** ~~~~~~~~~~~ COMPUTER'S TRUN ~~~~~~~~~~~~ **/
+function computerTurn(){
+
+	console.log("Computer's Hand: " + computehand[0] + ", " + computehand[1] + ", " + computehand[2]);
+	
+	//compCardNUM = number 1-40 (num and suit of card)
+	//ccNUMval = number 1-10 (num of card)
+	//ccNUMsuit = number 1-4 (suit of card)
+	compCard1 = computehand[0];
+	compCard2 = computehand[1];
+	compCard3 = computehand[2];
+	console.log("num & suit: " + compCard1 + ", " + compCard2 + ", " + compCard3);
+
+	cc1val = calculate(compCard1, VALUE);
+	cc2val = calculate(compCard2, VALUE);
+	cc3val = calculate(compCard3, VALUE);
+	console.log("num: " + cc1val + ", " + cc2val + ", " + cc3val);
+
+	cc1suit = calculate(compCard1, SUIT);
+	cc2suit = calculate(compCard2, SUIT);
+	cc3suit = calculate(compCard3, SUIT);
+	console.log("suit: " + cc1suit + ", " + cc2suit + ", " + cc3suit);
+		
+	discardedNum = calculate(discarded, VALUE);
+	discardedSuit = calculate(discarded, SUIT);
+	console.log("DISCARDED: " + discarded);
+
+	//"if all 3 cards are the same suit, attempt to get a better card of the same suit"
+	//if discard pile has same suit, and number is greater than rest, swap
+	//if not, swap with deck pile
+	if((cc1suit === cc2suit) && (cc2suit === cc3suit)){
+		if((discardedSuit === cc1suit)){
+
+		}
+	}
+
+	//"if 2 cards are the same suit, attempt to draw a 3rd card of that suit"
+	else if((cc1suit === cc2suit) || (cc1suit === cc2suit) || (cc2suit === cc3suit)){
+
+	}
+
+	//"if 2 cards are the same value, attempt to draw a 3rd card of that same value"
+	else if((cc1val === cc2val) || (cc1val === cc3val) || (cc2val === cc3val)){
+		
+	}		
+	
+	//"if 2 cards are in the set (ace,3,4), attempt to draw the 3rd card of the set"
+//	else if(){ }
+	//[this means 3 cards of different suits] "if the discard card is 8, 9, or 10 and matches one of our suits, choose it, discarding the lowest values card of the other 2 cards" -- "otherwise draw a new card, if it matches one of our suits, discard one of the other 2 cards with the lowest value. If it doesn't match, simply discard the lowest value card of the 4."
+	else if((cc1suit !== cc2suit) && (cc2suit !== cc3suit) && (cc1suit !== cc3suit)){
+
+	}
+}
+
+/*function beginGame(){
+
+	var winCount = 0;
+	var handCount = 1;
+	var gameCount = 1;
+//	while(gameCount < 6){
+		while(handCount < 4){
+			document.getElementById("hand").innerHTML = handCount;
+			start();
+		
+			handCount++;
+		}
+//	}
+
+
+}*/
+
 
 // Main function.  It should follow the steps in the requirements.
 // RIGHT NOW, it only deals cards as an example.
 // You need to finish it.
 function start() {
  
+	
+
+	document.getElementById("hand").innerHTML = handCount;
+
 	//asks and stores player's name
         var playerName = prompt("Please enter your name: ");
 
 	//overwrites what is shown on screen at first
 	document.getElementById("thePlayer").innerHTML = playerName;
+	
+	deal();
 
-	deal(); //deal cards
-
+	console.log("WHILE LOOP!");
+	console.log(handCount);
 	//output directions
 	document.getElementById("directions").innerHTML = "Select a card from the deck or the discard pile. Click here when you have chosen.";
 	
@@ -339,29 +442,16 @@ function start() {
 		
 		console.log("final choice: " + deckPileChoice);
 		disableDeckPileClick(); //don't allow user to click deck or pile after they've already chosen
-		
-/*		//add user's final choice to their hand
-		//remove chosen card from deck or pile (do this by creating new card)
-		if(deckPileChoice === "discard"){
-			document.getElementById("pc4").innerHTML = showpile;
-			//TO DO: FIGURE OUT HOW TO REMOVE CARD FROM DISCARD PILE FROM SHOWING - will be different first time
-
-		}
-		else if(deckPileChoice === "deck"){
-			document.getElementById("pc4").innerHTML = showDeckTopCard;
-			newDeckCard();
-		}		
-*/			
+			
 		document.getElementById("directions").innerHTML = "Select a card from your hand that you would like to discard. Click here when you have made your choice.";
 		enableHandClick();  //allow user to click on the cards in their hand
-		
+			
 		//when user clicks on new directions, this will output what the last card (from their hand) that they clicked was
 		document.getElementById("directions").onclick = function(){
 			console.log("final choice: " + playerHandChoice); 
 			disableHandClick();
-				
-			if(deckPileChoice === "discard"){
 					
+			if(deckPileChoice === "discard"){					
 				document.getElementById(playerHandChoice).innerHTML = showpile;
 			}
 			else if(deckPileChoice === "deck"){
@@ -375,25 +465,34 @@ function start() {
 				
 			console.log("card1: " + playerhand[0] + ", card2: " + playerhand[1] + ", card3: " + playerhand[2]);
 			console.log("SCORE: " + playerSum);
-			
-		}
+		
 
+		//if user picked from deck, create next card in deck
+		newDeckCard();
+
+		computerTurn();
 
 		//newDeckCard() - may have a problem with it - not udating correctly?
-		//NEW DECK CARD BEFORE COMPUTER'S TURN
-		//computer user's score
+		//NEW DECK CARD BEFORE COMPUTER'S TURN - IF user used card from deck................
+		//compute user's score
 		//computer's turn
+		//computer computer's score
 		//LOOP THROUGH THIS 3 TIMES
-
 		//THEN LOOK THROUGH THIS 5 TIMES HAI HAI HAI
 
+		}
+
 	}
+
 }
 
 
 // deal
 // start by dealing 3 cards to computer and you
 function deal() {
+	
+//	shuffle();  //MAYBE DELETE?
+
 	
 	// deal cards and display data
 	
@@ -493,7 +592,7 @@ function deal() {
 					<TH COLSPAN=2> Hand </TH>	
 				</TR>
 				<TR>
-					<TD COLSPAN=2> 0 </TD>	
+					<TD id="hand" COLSPAN=2> 0 </TD>	
 				</TR>
 			</TABLE>
 			</CENTER>
