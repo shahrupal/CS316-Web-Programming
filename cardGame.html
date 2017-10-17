@@ -66,6 +66,9 @@ var matchingSuit, matchingNum;
 
 var valNotContained;
 
+//var round = 1;
+//var game = 1;
+
 shuffle();   // start with new deal
 // shuffle
 // This is one way to create a shuffled deck
@@ -310,17 +313,19 @@ function updateUserCards(){
 	
 	if(deckPileChoice === "deck"){
 		if(playerHandChoice === "pc1"){
-			mycard1 = showDeckTopCard;  //actual image path
-			discarded = playerhand[0];  //number of new discarded card (num and suit)
+//			mycard1 = showDeckTopCard;  //actual image path
+			showDeckTopCard = "<img src = '/~paul/cards/"+deckTopCard+".png' />";
 			playerhand[0] = deckTopCard;  //number of card
 		}
 		if(playerHandChoice === "pc2"){
-			mycard2 = showDeckTopCard;	
+//			mycard2 = showDeckTopCard;	
+			showDeckTopCard = "<img src = '/~paul/cards/"+deckTopCard+".png' />";
 			discarded = playerhand[1];
 			playerhand[1] = deckTopCard;
 		}
 		if(playerHandChoice === "pc3"){
-			mycard3 = showDeckTopCard;
+//			mycard3 = showDeckTopCard;
+			showDeckTopCard = "<img src = '/~paul/cards/"+deckTopCard+".png' />";
 			discarded = playerhand[2];
 			playerhand[2] = deckTopCard;
 		}
@@ -328,20 +333,25 @@ function updateUserCards(){
 	
 	var temp;
 	if(deckPileChoice === "discard"){
+	
+//		showpile = 
 		if(playerHandChoice === "pc1"){
-			mycard1 = showpile;
+//			mycard1 = showpile;
+			showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
 			temp = discarded;
 			discarded = playerhand[0];  //this line and one below, swap card from hand and from discard pile
 			playerhand[0] = temp;
 		}
 		if(playerHandChoice === "pc2"){
 			mycard2 = showpile;
+			showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
 			temp = discarded;
 			discarded = playerhand[1];
 			playerhand[1] = temp;
 		}
 		if(playerHandChoice === "pc3"){
 			mycard3 = showpile;
+			showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
 			temp = discarded;
 			discarded = playerhand[2];
 			playerhand[2] = temp;
@@ -357,17 +367,26 @@ function updateCompCards(){
 
 }
 
-function smallestCardVal(){
+function smallestCardVal(temp){
+
+	var lowestVal;
 
 	if((cc1val <= cc2val) && (cc1val <= cc3val)){
-		return compCard1;
+		lowestVal = compCard1;
+		compCard1 = temp;
+
 	}
 	else if((cc2val <= cc1val) && (cc2val <= cc3val)){
-		return compCard2;
+		lowestVal = compCard2;
+		compCard2 = temp;
 	}
 	else{
-		return compCard3;
+		lowestVal = compCard3;
+		compCard3 = temp;
 	}
+
+	return lowestVal;
+	
 
 }
 
@@ -390,19 +409,19 @@ function smallestCardImg(discard){
 
 //when two cards having matching suit, this outputs card that does not have matching suit
 //stores matching suit of the other two cards
-function notMatchingSuit(){
+function notMatchingSuit(temp){
 
 	if(cc1suit === cc2suit){
-		matchingSuit = cc1suit
-		return compCard3;
+		matchingSuit = cc1suit;
+		compCard3 = temp;
 	}
 	else if(cc1suit === cc3suit){
 		matchingSuit = cc3suit;
-		return compCard2;
+		compCard2 = temp;
 	}
 	else{
 		matchingSuit = cc2suit;
-		return compCard1;
+		compCard1 = temp;
 	}
 }
 
@@ -423,19 +442,19 @@ function notMatchingSuitImg(discard){
 }
 
 
-function notMatchingVal(){
+function notMatchingVal(temp){
 	
 	if(cc1val === cc2val){
 		matchingNum = cc1val;
-		return compCard3;
+		compCard3 = temp;
 	}
 	if(cc1val === cc3val){
 		matchingNum = cc3val;
-		return compCard2;
+		compCard2 = temp;
 	}
 	if(cc2val === cc3val){
 		matchingNum = cc2val;
-		return compCard1;
+		compCard1 = temp;
 	}
 }
 
@@ -467,16 +486,16 @@ function cardsContain(c1, c2, c3, check){
 
 
 //returns card that does not contain a, b, or c
-function doesNotContain(a, b, c){
+function doesNotContain(a, b, c, temp){
 
 	if(((cc1val === a) && (cc2val === b)) || ((cc1val === b) && (cc2val === c)) || ((cc1val === a) && (cc2val === c))){
-		return compCard3;
+		compCard3 = temp;
 	}
         if(((cc2val === a) && (cc3val === b)) || ((cc2val === b) && (cc3val === c)) || ((cc2val === a) && (cc3val === c))){
-                return compCard1;
+                compCard1 = temp;
         }	
         if(((cc1val === a) && (cc3val === b)) || ((cc1val === b) && (cc3val === c)) || ((cc1val === a) && (cc3val === c))){
-                return compCard2;
+                compCard2 = temp;
         }
 }
 
@@ -501,7 +520,7 @@ function missingVal(c1,c2,c3,a,b,c){
 	if((c1 !== a) && (c2 !== a) && (c3 !== a)){
 		valNotContained = a;
 	}
-	else if((c1 !== b) && (c2 !== b) && (c3 !== b){
+	else if((c1 !== b) && (c2 !== b) && (c3 !== b)){
 		valNotContained = b;
 	}
 	else{
@@ -556,8 +575,8 @@ function computerTurn(){
 	if((cc1suit === cc2suit) && (cc2suit === cc3suit)){
 		if((discardedSuit === cc1suit) && ((discardedum > cc1val) || (discardedNum > cc2val) || (discardedNum > cc3val))){ 
 			tempHolder = discarded; //swap discarded card and lowest card from hand
-			discarded = smallestCardVal();
-			smallestCardVal() = tempHolder; //update hand
+			discarded = smallestCardVal(tempCard);
+//			smallestCardVal() = tempHolder; //update hand
 			smallestCardImg(tempHolder); //mutates hand card to equal discarded card
 			showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
 			document.getElementById("discard").innerHTML = showpile; 							
@@ -567,8 +586,8 @@ function computerTurn(){
 		else{
 			if((deckSuit === cc1suit) && (deckNum > cc1val) && (deckNum > cc2val) && (deckNum > cc3val)){
 //				tempHolder = deckTopCard;
-				discarded = smallestCardVal();
-				smallestCardVal() = deckTopCard;
+				discarded = smallestCardVal(tempHolder);
+//				smallestCardVal() = deckTopCard;
 				smallestCardImg(deckTopCard);
 //				getDeckImage(deckTopCard);				
 				showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
@@ -594,16 +613,16 @@ function computerTurn(){
 		
 		if(discardedSuit === matchingSuit){
 			tempHolder = discarded;
-			discarded = notMatchingSuit();
-			notMatchingSuit() = tempHolder;
+			discarded = notMatchingSuit(tempHolder);
+//			notMatchingSuit() = tempHolder;
 			notMatchingSuitImg(tempHolder);
 			showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
 			document.getElementById("discard").innerHTML = showpile;
 		}
 		else{
 			if(deckSuit === matchingSuit){
-				discarded = notMatchingSuit();
-				notMatchingSuit() = deckTopCard;
+				discarded = notMatchingSuit(deckTopCard);
+//				notMatchingSuit() = deckTopCard;
 				notMatchingSuitImg(deckTopCard);
 				showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
 				document.getElementById("discard").innerHTML = showpile;
@@ -630,16 +649,16 @@ function computerTurn(){
 		notMatchingVal();
 		if(discardedNum === matchingNum){
 			tempHolder = discarded;
-			discarded = notMatchingVal();
-			notMatchingVal() = tempHolder;
+			discarded = notMatchingVal(tempHolder);
+//			notMatchingVal() = tempHolder;
 			notMatchingValImg(tempHolder);
 			showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
 			document.getElementById("discard").innerHTML = showpile;
 		}
 		else{
 			if(deckNum === matchingNum){
-				discarded = notMatchingVal();
-				notMatchingVal() = deckTopCard;
+				discarded = notMatchingVal(deckTopCard);
+//				notMatchingVal() = deckTopCard;
 				notMatchingValImg(deckTopCard);
 				showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
 				document.getElementById("discard").innerHTML = showpile;
@@ -660,11 +679,11 @@ function computerTurn(){
 		
 		doesNotContain(1, 2, 3);
 		missingVal(cc1val, cc2val, cc3val, 1, 2, 3);
-		if(cardContain(cc1val, cc2val, cc3val, 1) && cardsContain(cc1val, cc2val, cc3val, 2)){
+//		if(cardContain(cc1val, cc2val, cc3val, 1) && cardsContain(cc1val, cc2val, cc3val, 2)){
 			if(discardedNum === valNotContained){
 				tempHolder = discarded;
-				discarded = doesNotContain(1,2,3);
-				doesNotContain(1,2,3) = tempHolder;
+				discarded = doesNotContain(1,2,3,tempHolder);
+//				doesNotContain(1,2,3) = tempHolder;
 				doesNotContainImg(1,2,3,tempHolder);
 				showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
 				document.getElementById("discard").innerHTML = showpile;
@@ -672,8 +691,8 @@ function computerTurn(){
 			}
 			else{
 				if(deckNum === valNotContained){
-					discarded = doesNotContain(1,2,3);
-					doesNotContain(1,2,3) = deckTopCard;
+					discarded = doesNotContain(1,2,3,deckTopCard);
+//					doesNotContain(1,2,3) = deckTopCard;
 					doesNotContainImg(1,2,3,tempHolder);
 					showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
 					document.getElementById("discard").innerHTML = showpile;
@@ -687,9 +706,50 @@ function computerTurn(){
 					
 				} 
 			}
-		} 
+//		} 
 
 	}
+
+	//"if 2 cards are in the set (ace, 4, 3), attempt to draw the 3rd card of the set"
+        else if((cardsContain(cc1val, cc2val, cc3val, 1) && cardsContain(cc1val, cc2val, cc3val, 4)) || (cardContains(cc1val, cc2val, cc3val, 4) && cardsContain(cc1val, cc2val, cc3val, 3)) || (cardsContain(cc1val, cc2val, cc3val, 1) && cardsContain(cc1val, cc2val, cc3val, 3))){
+
+                doesNotContain(1, 4, 3);
+                missingVal(cc1val, cc2val, cc3val, 1, 4, 3);
+//                if(cardContain(cc1val, cc2val, cc3val, 1) && cardsContain(cc1val, cc2val, cc3val, 4)){
+                        if(discardedNum === valNotContained){
+                                tempHolder = discarded;
+                                discarded = doesNotContain(1,4,3,tempHolder);
+           //                     doesNotContain(1,4,3) = tempHolder;
+                                doesNotContainImg(1,4,3,tempHolder);
+                                showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
+                                document.getElementById("discard").innerHTML = showpile;
+
+                        }
+                        else{
+                                if(deckNum === valNotContained){
+                                        discarded = doesNotContain(1,4,3,deckTopCard);
+   //                                     doesNotContain(1,4,3) = deckTopCard;
+                                        doesNotContainImg(1,4,3,tempHolder);
+                                        showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
+                                        document.getElementById("discard").innerHTML = showpile;
+                                        newDeckCard();
+                                }
+                                else{
+                                        discarded = deckTopCard;
+                                        showpile = "<img src = '/~paul/cards/"+discarded+".png' />";
+                                        document.getElementById("discard").innerHTML = showpile;
+                                        newDeckCard();
+
+                                }
+                        }
+  //              }
+
+        }
+
+
+	
+
+
 		//do same for rest of cards
 
 		//do same for deck
@@ -719,18 +779,21 @@ function start() {
  
 	
 
-	document.getElementById("hand").innerHTML = handCount;
+//	document.getElementById("hand").innerHTML = handCount;
 
-	//asks and stores player's name
-        var playerName = prompt("Please enter your name: ");
-
-	//overwrites what is shown on screen at first
-	document.getElementById("thePlayer").innerHTML = playerName;
 	
-	deal();
+	if(handCount === 1){
+		//asks and stores player's name
+        	var playerName = prompt("Please enter your name: ");
 
-	console.log("WHILE LOOP!");
+		//overwrites what is shown on screen at first
+		document.getElementById("thePlayer").innerHTML = playerName;
+	
+		deal();
+	}
+
 	console.log(handCount);
+
 	//output directions
 	document.getElementById("directions").innerHTML = "Select a card from the deck or the discard pile. Click here when you have chosen.";
 	
@@ -751,6 +814,8 @@ function start() {
 			console.log("final choice: " + playerHandChoice); 
 			disableHandClick();
 					
+			updateUserCards();
+
 			if(deckPileChoice === "discard"){					
 				document.getElementById(playerHandChoice).innerHTML = showpile;
 			}
@@ -760,7 +825,7 @@ function start() {
 			
 			document.getElementById("discard").innerHTML = cardToDiscard;
 			
-			updateUserCards();	
+		//	updateUserCards();	
 			calculateScore(playerhand[0], playerhand[1], playerhand[2]);  //calculate user's score		
 				
 			console.log("card1: " + playerhand[0] + ", card2: " + playerhand[1] + ", card3: " + playerhand[2]);
@@ -770,7 +835,7 @@ function start() {
 		//if user picked from deck, create next card in deck
 		newDeckCard();
 
-		computerTurn();
+//		computerTurn();
 
 		//newDeckCard() - may have a problem with it - not udating correctly?
 		//NEW DECK CARD BEFORE COMPUTER'S TURN - IF user used card from deck................
@@ -779,6 +844,11 @@ function start() {
 		//computer computer's score
 		//LOOP THROUGH THIS 3 TIMES
 		//THEN LOOK THROUGH THIS 5 TIMES HAI HAI HAI
+
+		handCount++;
+		if(handCount < 4){
+			start();
+		}		
 
 		}
 
@@ -792,7 +862,7 @@ function start() {
 function deal() {
 	
 //	shuffle();  //MAYBE DELETE?
-
+	round = 0;
 	
 	// deal cards and display data
 	
@@ -892,7 +962,7 @@ function deal() {
 					<TH COLSPAN=2> Hand </TH>	
 				</TR>
 				<TR>
-					<TD id="hand" COLSPAN=2> 0 </TD>	
+					<TD id="round" COLSPAN=2> 0 </TD>	
 				</TR>
 			</TABLE>
 			</CENTER>
@@ -907,7 +977,7 @@ function deal() {
 					<TH COLSPAN=2> Games Won/Total </TH>	
 				</TR>
 				<TR>
-					<TD COLSPAN=2> 0/0 </TD>	
+					<TD id="game" COLSPAN=2> 0/0 </TD>	
 				</TR>
 			</TABLE>
 			</CENTER>
