@@ -1,0 +1,379 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE>Card Game</TITLE>
+
+	<SCRIPT LANGUAGE="JavaScript">
+/* 
+CS316 program 2
+Initial Author: Paul Piwowarski 2014/09
+Modifications: Paul Linton 2016/09
+Modifications: Paul Linton 2017/10
+*/
+
+//************* GLOBAL VARIABLES *************************//
+var DSIZE = 40; // size of deck
+var HSIZE = 3;  // size of hand
+var NOTACARD = 0;
+var shuffleddeck = new Array(DSIZE); // shuffled deck
+var cardstart = new Array(DSIZE); // starting deck in order
+var computehand = new Array(HSIZE);
+var playerhand  = new Array(HSIZE);
+var discarded  = NOTACARD;
+var decklocation; // index into card array during play
+var CLUBS 		= 1;
+var SPADES 		= 2;
+var HEARTS 		= 3;
+var DIAMONDS 	= 4;
+var VALUE 		= 1;
+var SUIT 		= 2;
+var hiddencard  = "<img src = 'cardback.png' />";
+
+// Put other global variables here ***********************
+var dlcard1, dlcard2, dlcard3;
+var mycard1, mycard2, mycard3;
+
+var deckPileChoice;
+var playerHandChoice;
+
+var roundCount = 1;
+var gameCount = 1;
+
+
+shuffle(); // start with new deal
+
+// creates card array filled and shuffled
+function shuffle() {  
+
+	// card 1 is ace of clubs (1.png)
+	// card 11 is ace of spades (11.png)
+	// card 21 is ace of hearts (21.png)
+	// card 31 is ace of diamonds (31.png)
+	// card 40 is 10 of diamonds (40.png)
+
+	for (var i = 0; i < DSIZE;i++) {
+		cardstart[i] = i+1;
+	}
+	// select card randomly from cardstart and put in card
+	var randcard; // randomly selected card 
+	for (var j = 0; j < DSIZE; j++) {
+		randcard = Math.round(Math.random() * (DSIZE - j - 1)); // choose card
+		shuffleddeck[j] = cardstart[randcard]; // store random card
+		cardstart.splice(randcard, 1); // pack array
+	}  
+	decklocation = 0; // index into card array
+}
+
+
+// depending on user input, outputs value of card (1-10) or suit of card (1-4)
+function calculate(the_card, valueorsuit) {
+	var value; 
+	var suit; 
+
+	value = the_card % 10;
+	if (value == 0) {
+		value = 10;
+	}
+	suit = parseInt(the_card / 10) + 1;
+
+	if (valueorsuit == SUIT) {
+		return suit;
+	} else {
+		return value; 
+	}
+}
+
+function computescore(cards) {
+//	alert("computescore called");  // replace with actual code for computescore
+}
+
+function newcard(cards) {
+//	alert("newcard called");  // replace with actual code for newcard
+}
+
+function disableNewcard() {
+	theDeck = document.getElementById("xxxx");
+	thePile = document.getElementById("yyyy");
+
+	// something needs to go here.
+
+}
+function enableNewcard() {
+	theDeck = document.getElementById("deck");
+	thePile = document.getElementById("discard");
+
+	theDeck.onclick = SelectCard;
+	thePile.onclick = SelectCard;
+
+	console.log("End of enableNewcard()");
+}
+
+function ignoreClick(what) {
+	console.log("Something clicked "+what+", ignored!");
+}
+
+function SelectCard() {
+	console.log("beginning of SelectCard()");
+
+	document.getElementById(this.id).style.border = "2px solid #42f450";
+
+	if(this.id === "deck"){
+		deckPileChoice = this.id;
+		discarded = deckTopCard; //when user clicks deck, card from deck should be shown in discard pile
+	}
+	
+	if(this.id === "discard"){
+		deckPileChoice = this.id;
+	}
+
+	if(this.id === "pc1"){
+		playerHandChoice = this.id;
+		discarded = playerhand[0];  //when user clicks card from hand, it should then go into the discard pile
+	}
+
+	if(this.id === "pc2"){
+		playerHandChoice = this.id;
+		discarded = playerhand[1];
+	}
+
+	this(this.id === "pc3"){
+		playerHandChoice = this.id;
+		discarded = playerhand[2];
+	}
+
+
+	var whichCard = null;
+	console.log("Hey, "+this.id+" was clicked!");
+	return;
+}
+
+//allow user to click on any card in their hand
+function enableHandClick(){
+
+	document.getElementById("pc1").onclick = SelectCard;
+	document.getElementById("pc2").onclick = SelectCard;
+	document.getElementById("pc3").onclick = SelectCard;
+
+}
+
+//disable user from clicks cards in their hand
+function disableHandClick(){
+	
+	handCard1 = document.getElementById("pc1");
+	handCard2 = document.getElementById("pc2");
+	handCard3 = document.getElementById("pc3");
+
+	handCard1.onclick = null;
+	handCard2.onclick = null;
+	handCard3.onclick = null;
+	
+}
+
+//allow user to click on deck
+function enableDeckClick(){
+
+	document.getElementById("deck").onclick = SelectCard;
+
+}
+
+//disable user from clicking on deck
+function disableDeckClick(){
+	
+	theDeck = document.getElementById("deck");
+	theDeck.onclick = null;
+
+}
+
+//allow user to click discard
+function endableDiscardClick(){
+	
+	document.getElementById("discard").onclick = SelectCard;
+
+}
+
+//disable user from click discard
+function disableDiscardClick(){
+
+	theDiscard = document.getElementById("discard");
+	theDiscard.onclick = null;
+
+}
+
+//returns image path of a given card 
+function imagePath(cardNumber){
+
+	return "<img src = '"+cardNumber+".png' />";;
+
+}
+
+/* MAIN FUNCTION */
+function start() {
+	
+	//if on the first round of a game, ask and output player's name
+	if(roundCount === 1){
+
+		var playerName = prompt("Please enter your name: ");
+		document.getElementById("thePlayer").innerHTML = playerName; 	
+
+		deal(); //deal new cards
+
+	}
+
+	//output directions
+	document.getElementById("directions").innerHTML = "Select a card from the deck of the discard pile. Click here when you have chose.";
+
+	disableHandClick();
+	enableDeckClick();
+	enableDiscardClick();
+	
+	
+	
+	
+	
+
+
+
+}
+
+
+
+
+
+
+
+// deal
+// start by dealing 3 cards to computer and you
+function deal() {
+
+	// deal cards and display data
+	dealpressed = 1; // deal button has been pressed
+
+	// draw three cards for each player
+	computehand[0] = shuffleddeck[decklocation++];
+	computehand[1] = shuffleddeck[decklocation++];
+	computehand[2] = shuffleddeck[decklocation++];
+
+	playerhand[0]  = shuffleddeck[decklocation++];
+	playerhand[1]  = shuffleddeck[decklocation++];
+	playerhand[2]  = shuffleddeck[decklocation++];
+
+	var cardback = hiddencard;
+
+	//  card from same directory as the program/HTML/js file
+	dlcard1 = "<img src = '"+computehand[0]+".png' />";
+	dlcard2 = "<img src = '"+computehand[1]+".png' />";
+	dlcard3 = "<img src = '"+computehand[2]+".png' />";
+
+//  Do not actually display cards until hand is over!
+//	document.getElementById("cc1").innerHTML = dlcard1;
+//	document.getElementById("cc2").innerHTML = dlcard2;
+//	document.getElementById("cc3").innerHTML = dlcard3;
+
+	document.getElementById("cc1").innerHTML = hiddencard;
+	document.getElementById("cc2").innerHTML = hiddencard;
+	document.getElementById("cc3").innerHTML = hiddencard;
+
+	mycard1 = "<img src = '"+playerhand[0]+".png' />";
+	mycard2 = "<img src = '"+playerhand[1]+".png' />";
+	mycard3 = "<img src = '"+playerhand[2]+".png' />";
+
+	document.getElementById("pc1").innerHTML = mycard1;
+	document.getElementById("pc2").innerHTML = mycard2;
+	document.getElementById("pc3").innerHTML = mycard3;
+
+	discarded = shuffleddeck[decklocation++];
+	showpile = "<img src = '"+discarded+".png' />";
+
+	document.getElementById("discard").innerHTML = showpile;
+	document.getElementById("discard").style.borderColor = "green";
+	document.getElementById("discard").style.borderWidth = "20px";
+
+	deckTopCard = shuffleddeck[decklocation++];
+	
+	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~ EXAMPLES ~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+    	// Example of changing the style (color, border width) of an element
+	document.getElementById("thePlayer").style.borderColor = "green";
+	document.getElementById("thePlayer").style.borderWidth = "5px";
+
+	// Example how to display on screen in textboxes
+	document.getElementById("computerscore").innerHTML ="1";
+	document.getElementById("playerscore").innerHTML ="2";
+	
+	document.getElementById("directions").innerHTML =
+			"Select a new/discarded card";
+}
+
+</SCRIPT>
+
+</HEAD>
+<BODY >
+<CENTER>
+<TABLE>
+	<TH STYLE="border: none; padding: 0in">
+		<P><INPUT TYPE=BUTTON VALUE="New Game" 
+			STYLE="width: 1.20in; height: 0.4in" ONCLICK="start();"> </P>
+	</TH>
+<TABLE>
+	<TR>
+		<TH COLSPAN=2 id="theComputer"
+			style="border: 2px blue">Computer</TH>
+		<TH id="computerscore"</TH>
+		<TH>       </TH>
+		<TH COLSPAN=2 id="thePlayer"
+			style="border: 1px solid green">PlayerName</TH>
+		<TH id="playerscore"</TH>
+	</TR>
+	<TR> <!-- Cards in play -->
+		<TD id="cc1" style="border: 2px solid white"> <img src = '/~paul/cards/cardback.png' /></TD>
+		<TD id="cc2" style="border: 2px solid white"> <img src = '/~paul/cards/cardback.png' /></TD>
+		<TD id="cc3" style="border: 2px solid white"> <img src = '/~paul/cards/cardback.png' /></TD>
+		<TD id="spc"> </TD>
+		<TD id="pc1"> <img src = '/~paul/cards/cardback.png' /></TD>
+		<TD id="pc2"> <img src = '/~paul/cards/cardback.png' /></TD>
+		<TD id="pc3"> <img src = '/~paul/cards/cardback.png' /></TD>
+	</TR>
+	<TR> <!-- deck/discard -->
+		<TD COLSPAN=2> 
+			<CENTER>
+			<TABLE>
+				<TR>
+					<TH COLSPAN=2> Hand </TH>	
+				</TR>
+				<TR>
+					<TD COLSPAN=2> 0 </TD>	
+				</TR>
+			</TABLE>
+			</CENTER>
+		</TD>
+		<TD id="deck" > <img src = '/~paul/cards/cardback.png' /></TD>
+		<TD> </TD>
+		<TD id="discard" > <img src = '/~paul/cards/cardback.png' /></TD>
+		<TD COLSPAN=2> 
+			<CENTER>
+			<TABLE>
+				<TR>
+					<TH COLSPAN=2> Games Won/Total </TH>	
+				</TR>
+				<TR>
+					<TD COLSPAN=2> 0/0 </TD>	
+				</TR>
+			</TABLE>
+			</CENTER>
+		</TD>
+	</TR>
+</TABLE>
+<TABLE>
+	<TR>
+		<TD> 
+		
+		</TD>
+		<TD> </TD>
+	</TR>
+</TABLE>
+	<p id="directions"> </p>
+</CENTER>
+
+</BODY>
+</HTML>
