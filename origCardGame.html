@@ -129,17 +129,17 @@ function SelectCard() {
 
 	if(this.id === "pc1"){
 		playerHandChoice = this.id;
-		discarded = playerhand[0];  //when user clicks card from hand, it should then go into the discard pile
+//		discarded = playerhand[0];  //when user clicks card from hand, it should then go into the discard pile
 	}
 
 	if(this.id === "pc2"){
 		playerHandChoice = this.id;
-		discarded = playerhand[1];
+//		discarded = playerhand[1];
 	}
 
-	this(this.id === "pc3"){
+	if(this.id === "pc3"){
 		playerHandChoice = this.id;
-		discarded = playerhand[2];
+//		discarded = playerhand[2];
 	}
 
 
@@ -186,7 +186,7 @@ function disableDeckClick(){
 }
 
 //allow user to click discard
-function endableDiscardClick(){
+function enableDiscardClick(){
 	
 	document.getElementById("discard").onclick = SelectCard;
 
@@ -221,19 +221,69 @@ function start() {
 	}
 
 	//output directions
-	document.getElementById("directions").innerHTML = "Select a card from the deck of the discard pile. Click here when you have chose.";
+	/*TO DO: FIGURE OUT HOW TO FORCE USER TO ONLY CLICK DECK/DISCARD ONCE*/
+	document.getElementById("directions").innerHTML = "Select a card from the deck of the discard pile. CLICK HERE when you have chosen.";
 
 	disableHandClick();
 	enableDeckClick();
 	enableDiscardClick();
-	
-	
-	
-	
+		
+
+	document.getElementById("directions").onclick = function(){	
+	console.log("final choice: " + deckPileChoice);
+		
 	
 
+		//if user clicked on deck, put card on discard pile and create new top card of deck
+		if(deckPileChoice === "deck"){
+			document.getElementById("discard").innerHTML = imagePath(deckTopCard);
+			deckTopCard = shuffleddeck[decklocation++];
+		}
+		
+		disableDeckClick();  //did not disable discard bc user can discard the discard!
+		
+		document.getElementById("directions").innerHTML = "Select a card (from your hand or discard) that you would like to discard. CLICK HERE when you have made your choice.";
+			
+		enableHandClick(); //allow user to click on any card in their hand (card to discard)
+		
+		document.getElementById("directions").onclick = function(){
+			
+			//if user clicks discard, do nothing
+			
+			if(playerHandChoice === "pc1"){
 
+				//swap card numbers
+				var temp = playerhand[0];
+				playerhand[0] = discarded;
+				discarded = temp;
 
+				//output images
+				document.getElementById(playerHandChoice).innerHTML = imagePath(playerhand[0]);
+				document.getElementById("discard").innerHTML = imagePath(discarded);
+
+			}
+			
+			if(playerHandChoice === "pc2"){
+				var temp = playerhand[1];
+				playerhand[1] = discarded;
+				discarded = temp;
+				
+				document.getElementById(playerHandChoice).innerHTML = imagePath(playerhand[1]);
+				document.getElementById("discard").innerHTML = imagePath(discarded);
+			}
+	
+			if(playerHandChoice === "pc3"){
+				var temp = playerhand[2];
+				playerhand[2] = discarded;
+				discarded = temp;
+			
+				document.getElementById(playerHandChoice).innerHTML = imagePath(playerhand[2]);
+				document.getElementById("discard").innerHTML = imagePath(discarded);
+
+			}
+ 		}	
+	}
+			
 }
 
 
@@ -313,7 +363,7 @@ function deal() {
 <TABLE>
 	<TH STYLE="border: none; padding: 0in">
 		<P><INPUT TYPE=BUTTON VALUE="New Game" 
-			STYLE="width: 1.20in; height: 0.4in" ONCLICK="start();"> </P>
+			STYLE="width: 1.20in; height: 0.4in" ONCLICK="start();"> </P>;
 	</TH>
 <TABLE>
 	<TR>
