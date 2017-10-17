@@ -219,7 +219,8 @@ function start() {
 		deal(); //deal new cards
 
 	}
-
+	
+	console.log("round: " + roundCount);
 	//output directions
 	/*TO DO: FIGURE OUT HOW TO FORCE USER TO ONLY CLICK DECK/DISCARD ONCE*/
 	document.getElementById("directions").innerHTML = "Select a card from the deck of the discard pile. CLICK HERE when you have chosen.";
@@ -281,15 +282,30 @@ function start() {
 				document.getElementById("discard").innerHTML = imagePath(discarded);
 
 			}
- 		}	
-	}
+
+			document.getElementById("directions").innerHTML = ""; //remove directions, so user cannot click on it after 3 rounds (until game is reset)
 			
+
+			//computer turn			
+
+			roundCount++;
+			if(roundCount < 4){
+				start();
+			}
+			else{
+				disableDeckClick();
+				disableDiscardClick();
+				disableHandClick();
+
+			}
+			
+			//game count
+ 		}
+
+
+	}
+				
 }
-
-
-
-
-
 
 
 // deal
@@ -353,6 +369,11 @@ function deal() {
 	
 	document.getElementById("directions").innerHTML =
 			"Select a new/discarded card";
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ COMPUTER TURN ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+function computerTurn(){ 
+	console.log("beep boop i'm a computer playing a game");
 }
 
 </SCRIPT>
