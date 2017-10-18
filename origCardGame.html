@@ -12,6 +12,8 @@ Modifications: Paul Linton 2016/09
 Modifications: Paul Linton 2017/10
 */
 
+
+
 //************* GLOBAL VARIABLES *************************//
 var DSIZE = 40; // size of deck
 var HSIZE = 3;  // size of hand
@@ -30,7 +32,7 @@ var VALUE 		= 1;
 var SUIT 		= 2;
 var hiddencard  = "<img src = 'cardback.png' />";
 
-// Put other global variables here ***********************
+// ***************** Put other global variables here *********************** //
 var dlcard1, dlcard2, dlcard3;
 var mycard1, mycard2, mycard3;
 
@@ -122,7 +124,7 @@ function ignoreClick(what) {
 function SelectCard() {
 	console.log("beginning of SelectCard()");
 
-	document.getElementById(this.id).style.border = "2px solid #42f450";
+//	document.getElementById(this.id).style.border = "2px solid #42f450";
 
 	if(this.id === "deck"){
 		deckPileChoice = this.id;
@@ -135,17 +137,26 @@ function SelectCard() {
 
 	if(this.id === "pc1"){
 		playerHandChoice = this.id;
-//		discarded = playerhand[0];  //when user clicks card from hand, it should then go into the discard pile
+		document.getElementById(this.id).style.border = "5px solid #f23a3a"; //put red border around clicked card
+		document.getElementById("pc2").style.border = "5px solid #42f450"; //put green borders around rest of cards (in case user toggles)
+		document.getElementById("pc3").style.border = "5px solid #42f450";
+		document.getElementById("discard").style.border = "5px solid #42f450";
 	}
 
 	if(this.id === "pc2"){
 		playerHandChoice = this.id;
-//		discarded = playerhand[1];
+		document.getElementById(this.id).style.border = "5px solid #f23a3a"; //put red border around clicked card
+                document.getElementById("pc1").style.border = "5px solid #42f450"; //put green borders around rest of cards (in case user toggles)
+                document.getElementById("pc3").style.border = "5px solid #42f450";
+                document.getElementById("discard").style.border = "5px solid #42f450";
 	}
 
 	if(this.id === "pc3"){
 		playerHandChoice = this.id;
-//		discarded = playerhand[2];
+		document.getElementById(this.id).style.border = "5px solid #f23a3a"; //put red border around clicked card
+                document.getElementById("pc1").style.border = "5px solid #42f450"; //put green borders around rest of cards (in case user toggles)
+                document.getElementById("pc2").style.border = "5px solid #42f450";
+                document.getElementById("discard").style.border = "5px solid #42f450";
 	}
 
 
@@ -300,8 +311,14 @@ function start() {
 		
 		disableDeckClick();  //did not disable discard bc user can discard the discard!
 		
-		document.getElementById("directions").innerHTML = "Select a card (from your hand or discard) that you would like to discard. CLICK HERE when you have made your choice.";
+		document.getElementById("directions").innerHTML = "Select a card (in green) that you would like to discard. CLICK HERE when you have made your choice.";
 	
+		//create green border around all cards user may choose
+		document.getElementById("pc1").style.border = "5px solid #42f450";	
+		document.getElementById("pc2").style.border = "5px solid #42f450";
+		document.getElementById("pc3").style.border = "5px solid #42f450";
+		document.getElementById("discard").style.border = "5px solid #42f450";
+
 		playerHandChoice = "";
 		
 		enableDiscardClick();	
@@ -315,7 +332,7 @@ function start() {
 //			}
 			
 			if(this.id === "discard"){
-				console.log("pls tell me this works");
+				console.log("do nothing");
 			}			
 
 			else if(playerHandChoice === "pc1"){
@@ -352,6 +369,11 @@ function start() {
 
 			}
 
+			//change borders back to white after discard
+			document.getElementById("pc1").style.border = "2px solid #ffffff";
+        	        document.getElementById("pc2").style.border = "2px solid #ffffff";
+                	document.getElementById("pc3").style.border = "2px solid #ffffff";
+                	document.getElementById("discard").style.border = "2px solid #ffffff";
 
 //			document.getElementById("directions").innerHTML = ""; //remove directions, so user cannot click on it after 3 rounds (until game is neset)
 			
@@ -492,16 +514,16 @@ function deal() {
 	showpile = "<img src = '"+discarded+".png' />";
 
 	document.getElementById("discard").innerHTML = showpile;
-	document.getElementById("discard").style.borderColor = "green";
-	document.getElementById("discard").style.borderWidth = "2px";
+//	document.getElementById("discard").style.borderColor = "green";
+//	document.getElementById("discard").style.borderWidth = "2px";
 
 	deckTopCard = shuffleddeck[decklocation++];
 	
 	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~ EXAMPLES ~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
     	// Example of changing the style (color, border width) of an element
-	document.getElementById("thePlayer").style.borderColor = "green";
-	document.getElementById("thePlayer").style.borderWidth = "5px";
+//	document.getElementById("thePlayer").style.borderColor = "green";
+//	document.getElementById("thePlayer").style.borderWidth = "5px";
 
 	// Example how to display on screen in textboxes
 //	document.getElementById("computerscore").innerHTML ="1";
@@ -840,7 +862,7 @@ function computerTurn(){
 		<TH id="computerscore"</TH>
 		<TH>       </TH>
 		<TH COLSPAN=2 id="thePlayer"
-			style="border: 1px solid green">Player Name</TH>
+			style="border: 2px solid #39c8ef">Player Name</TH>
 		<TH id="playerscore"</TH>
 	</TR>
 	<TR> <!-- Cards in play -->
