@@ -357,16 +357,22 @@ function start() {
 			
 
 			//computer turn			
-			
+			computerTurn();		
+	
 			//compute score
 			playerScore += calculateScore(playerhand[0], playerhand[1], playerhand[2]);						
 			computerScore += calculateScore(computehand[0], computehand[1], computehand[2]);
 			
 			console.log("player cards: " + playerhand[0] + ", " + playerhand[1] + ", " + playerhand[2]);
+			console.log("player suits: " + calculate(playerhand[0], SUIT) + ", " + calculate(playerhand[1], SUIT) + ", " + calculate(playerhand[2], SUIT));
 			console.log("player score: " + playerScore);
 
+			console.log("computer cards: " + computehand[0] + ", " + computehand[1] + ", " + computehand[2]);
+			console.log("compute score: " + computerScore);
+
 			document.getElementById("playerscore").innerHTML = playerScore;	
-	
+			document.getElementById("computerscore").innerHTML = computerScore;	
+
 			if(gameCount <= 5){
 				roundCount++;
 				if(roundCount < 4){
@@ -586,7 +592,7 @@ function computerTurn(){
 				computehand[2] = deckTopCard;
 				discarded = temp;
 				document.getElementById("discard").innerHTML = imagePath(discarded);
-				deckTopCard = shuffledeck[decklocation++];
+				deckTopCard = shuffleddeck[decklocation++];
 			}
 		}
 		else if(cc1suit === cc3suit){
@@ -601,7 +607,7 @@ function computerTurn(){
                                 computehand[1] = deckTopCard;
                                 discarded = temp;
                                 document.getElementById("discard").innerHTML = imagePath(discarded);
-                                deckTopCard = shuffledeck[decklocation++];
+                                deckTopCard = shuffleddeck[decklocation++];
                         }
 		}	
 		else if(cc2suit === cc3suit){
@@ -616,7 +622,7 @@ function computerTurn(){
                                 computehand[0] = deckTopCard;
                                 discarded = temp;
                                 document.getElementById("discard").innerHTML = imagePath(discarded);
-                                deckTopCard = shuffledeck[decklocation++];
+                                deckTopCard = shuffleddeck[decklocation++];
                         }
 		}
 	}
@@ -640,7 +646,7 @@ function computerTurn(){
                                 computehand[2] = deckTopCard;
                                 discarded = temp;
                                 document.getElementById("discard").innerHTML = imagePath(discarded);
-                                deckTopCard = shuffledeck[decklocation++];
+                                deckTopCard = shuffleddeck[decklocation++];
                         }
                 }
 		else if(cc1val === cc3val){
@@ -655,7 +661,7 @@ function computerTurn(){
                                 computehand[1] = deckTopCard;
                                 discarded = temp;
                                 document.getElementById("discard").innerHTML = imagePath(discarded);
-                                deckTopCard = shuffledeck[decklocation++];
+                                deckTopCard = shuffleddeck[decklocation++];
                         }
                 }
                 else if(cc2val === cc3val){
@@ -670,7 +676,7 @@ function computerTurn(){
                                 computehand[0] = deckTopCard;
                                 discarded = temp;
                                 document.getElementById("discard").innerHTML = imagePath(discarded);
-                                deckTopCard = shuffledeck[decklocation++];
+                                deckTopCard = shuffleddeck[decklocation++];
                         }
                 }
         }                
