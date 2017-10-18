@@ -25,7 +25,7 @@ var decklocation; // index into card array during play
 var CLUBS 		= 1;
 var SPADES 		= 2;
 var HEARTS 		= 3;
-var DIAMONDS 	= 4;
+var DIAMONDS 		= 4;
 var VALUE 		= 1;
 var SUIT 		= 2;
 var hiddencard  = "<img src = 'cardback.png' />";
@@ -40,6 +40,12 @@ var playerHandChoice;
 var roundCount = 1;
 var gameCount = 1;
 
+var playerScore = 0;
+var computerScore = 0;
+
+var playerWin = 0;
+
+var firstTurn = true;
 
 shuffle(); // start with new deal
 
@@ -207,19 +213,67 @@ function imagePath(cardNumber){
 
 }
 
+
+//outputs score of hand, given the three cards
+function calculateScore(c1, c2, c3){
+
+	//c1val = value of card (1-10)
+	//c1suit = suit of card (1-4)
+
+	c1val = calculate(c1, VALUE);
+	c1suit = calculate(c1, SUIT);
+	
+	c2val = calculate(c2, VALUE);
+	c2suit = calculate(c2, SUIT);
+
+	c3val = calculate(c3, VALUE);
+	c3suit = calculate(c3, SUIT);
+
+	//50 points -- three cards are of same value
+	if((c1val === c2val) && (c2val === c3val)){
+		return 50;		
+	}
+
+	//40 points -- the three card values are: ace, 2, 3 of any suits
+	//31 points -- the three card values are: ace, 3, 4 of any suits
+	if((c1val === 1) || (c2val === 1) || (c3val === 1)){
+		if((c1val === 3) || (c2val === 3) || (c3val === 3)){
+			if((c1val === 2) || (c2val === 2) || (c3val === 2)){
+				return 40;
+			}
+			else if((c1val === 4) || (c2val === 4) || (c3val === 4)){
+				return 31;
+			}
+		}
+	}
+
+	//sum of cards points -- when all three cards are the same suit
+	if((c1suit === c2suit) && (c2suit === c3suit)){
+		return (c1val + c2val + c3val);
+	}
+	
+	//if none of the above, score is zero
+	return 0;
+}
+
+
 /* MAIN FUNCTION */
 function start() {
 	
 	//if on the first round of a game, ask and output player's name
-	if(roundCount === 1){
+	if(firstTurn){
 
+		firstTurn = false;	
+	
 		var playerName = prompt("Please enter your name: ");
 		document.getElementById("thePlayer").innerHTML = playerName; 	
 
 		deal(); //deal new cards
-
+	
 	}
 	
+	document.getElementById("round").innerHTML = roundCount;
+
 	console.log("round: " + roundCount);
 	//output directions
 	/*TO DO: FIGURE OUT HOW TO FORCE USER TO ONLY CLICK DECK/DISCARD ONCE*/
@@ -244,15 +298,25 @@ function start() {
 		disableDeckClick();  //did not disable discard bc user can discard the discard!
 		
 		document.getElementById("directions").innerHTML = "Select a card (from your hand or discard) that you would like to discard. CLICK HERE when you have made your choice.";
-			
+	
+		playerHandChoice = "";
+		
+		enableDiscardClick();	
 		enableHandClick(); //allow user to click on any card in their hand (card to discard)
 		
 		document.getElementById("directions").onclick = function(){
 			
-			//if user clicks discard, do nothing
+//			//if user clicks discard, do nothing
+//			if(deckPileChoice === "discard"){
+//				console.log("i'm doing nothing like i'm supposed to :-)");
+//			}
 			
-			if(playerHandChoice === "pc1"){
+			if(this.id === "discard"){
+				console.log("pls tell me this works");
+			}			
 
+			else if(playerHandChoice === "pc1"){
+				console.log("no1");
 				//swap card numbers
 				var temp = playerhand[0];
 				playerhand[0] = discarded;
@@ -264,7 +328,8 @@ function start() {
 
 			}
 			
-			if(playerHandChoice === "pc2"){
+			else if(playerHandChoice === "pc2"){
+				console.log("no2");
 				var temp = playerhand[1];
 				playerhand[1] = discarded;
 				discarded = temp;
@@ -273,7 +338,8 @@ function start() {
 				document.getElementById("discard").innerHTML = imagePath(discarded);
 			}
 	
-			if(playerHandChoice === "pc3"){
+			else if(playerHandChoice === "pc3"){
+				console.log("no3");
 				var temp = playerhand[2];
 				playerhand[2] = discarded;
 				discarded = temp;
@@ -283,23 +349,56 @@ function start() {
 
 			}
 
+
 			document.getElementById("directions").innerHTML = ""; //remove directions, so user cannot click on it after 3 rounds (until game is reset)
 			
 
 			//computer turn			
-
-			roundCount++;
-			if(roundCount < 4){
-				start();
-			}
-			else{
-				disableDeckClick();
-				disableDiscardClick();
-				disableHandClick();
-
-			}
 			
-			//game count
+			//compute score
+			playerScore += calculateScore(playerhand[0], playerhand[1], playerhand[2]);						
+			computerScore += calculateScore(computehand[0], computehand[1], computehand[2]);
+			
+			document.getElementById("playerscore").innerHTML = playerScore;	
+	
+			if(gameCount < 6){
+				roundCount++;
+				if(roundCount < 4){
+					document.getElementById("playerscore").innerHTML = playerScore;
+					start();
+				
+				}
+				else{
+			
+					if(playerScore >= computerScore){
+						alert("You won!\nComputer Score: " + computerScore + "\nPlayer Score: " + playerScore); 
+						playerWin++;				
+					}					
+					else{
+						alert("You lost!\nComputer Score: " + computerScore + "\nPlayer Score: " + playerScore);
+					}
+					
+					document.getElementById("game").innerHTML = playerWin + "/" + gameCount;
+	
+					disableDeckClick();
+					disableDiscardClick();
+					disableHandClick();
+				
+		//			document.getElementById("playerscore").innerHTML = playerScore;
+
+					roundCount = 1;
+					decklocation = 0;
+					playerScore = 0;
+					computerScore = 0;
+					shuffle();
+					gameCount++;
+					deal();
+					start();
+				}
+			
+			}
+			//ELSE
+			//playerWin=0
  		}
 
 
@@ -353,7 +452,7 @@ function deal() {
 
 	document.getElementById("discard").innerHTML = showpile;
 	document.getElementById("discard").style.borderColor = "green";
-	document.getElementById("discard").style.borderWidth = "20px";
+	document.getElementById("discard").style.borderWidth = "2px";
 
 	deckTopCard = shuffleddeck[decklocation++];
 	
@@ -364,11 +463,10 @@ function deal() {
 	document.getElementById("thePlayer").style.borderWidth = "5px";
 
 	// Example how to display on screen in textboxes
-	document.getElementById("computerscore").innerHTML ="1";
-	document.getElementById("playerscore").innerHTML ="2";
+//	document.getElementById("computerscore").innerHTML ="1";
+//	document.getElementById("playerscore").innerHTML ="2";
 	
-	document.getElementById("directions").innerHTML =
-			"Select a new/discarded card";
+//	document.getElementById("directions").innerHTML = "Select a new/discarded card";
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ COMPUTER TURN ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -384,7 +482,7 @@ function computerTurn(){
 <TABLE>
 	<TH STYLE="border: none; padding: 0in">
 		<P><INPUT TYPE=BUTTON VALUE="New Game" 
-			STYLE="width: 1.20in; height: 0.4in" ONCLICK="start();"> </P>;
+			STYLE="width: 1.20in; height: 0.4in" ONCLICK="start();"> </P>
 	</TH>
 <TABLE>
 	<TR>
@@ -393,7 +491,7 @@ function computerTurn(){
 		<TH id="computerscore"</TH>
 		<TH>       </TH>
 		<TH COLSPAN=2 id="thePlayer"
-			style="border: 1px solid green">PlayerName</TH>
+			style="border: 1px solid green">Player Name</TH>
 		<TH id="playerscore"</TH>
 	</TR>
 	<TR> <!-- Cards in play -->
@@ -410,10 +508,10 @@ function computerTurn(){
 			<CENTER>
 			<TABLE>
 				<TR>
-					<TH COLSPAN=2> Hand </TH>	
+					<TH COLSPAN=2> Round </TH>	
 				</TR>
 				<TR>
-					<TD COLSPAN=2> 0 </TD>	
+					<TD id ="round" COLSPAN=2> 0 </TD>	
 				</TR>
 			</TABLE>
 			</CENTER>
@@ -428,7 +526,7 @@ function computerTurn(){
 					<TH COLSPAN=2> Games Won/Total </TH>	
 				</TR>
 				<TR>
-					<TD COLSPAN=2> 0/0 </TD>	
+					<TD id="game" COLSPAN=2> 0/0 </TD>	
 				</TR>
 			</TABLE>
 			</CENTER>
