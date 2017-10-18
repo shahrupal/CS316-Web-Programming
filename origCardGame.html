@@ -353,7 +353,7 @@ function start() {
 			}
 
 
-//			document.getElementById("directions").innerHTML = ""; //remove directions, so user cannot click on it after 3 rounds (until game is reset)
+//			document.getElementById("directions").innerHTML = ""; //remove directions, so user cannot click on it after 3 rounds (until game is neset)
 			
 
 			//computer turn			
@@ -407,6 +407,10 @@ function start() {
 				}
 			
 			}
+
+//			if(gameCount > 5){
+//				reset();
+//			}
 			
 	
 
@@ -502,8 +506,77 @@ function deal() {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ COMPUTER TURN ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 function computerTurn(){ 
+	
+	//cc1val = value of card (1-10)
+	//cc1val = suit of card (1-4)
+
+	cc1val = calculate(computecard[0], VALUE);
+	cc1suit = calculate(computecard[0], SUIT);
+
+	cc2val = calculate(computecard[1], VALUE);
+	cc2suit = calculate(computecard[1], SUIT);
+
+	cc3val = calculate(computecard[2], VALUE);
+	cc3suit = calculate(computecard[2], SUIT);
+
+	discardedVal = calculate(discarded, VALUE);
+	discardedSuit = calculate(discarded, SUIT);
+
+	deckVal = calculate(deckTopCard, VALUE);
+	deckSuit = calculate(deckTopCard, SUIT);
+
+	//if all three cards are the same suit, attempt to get a better card of the same suit	
+	if((cc1suit === cc2suit) && (cc2suit === cc3suit)){
+		if(discardedSuit === cc1suit){  //if same suit as deck card
+			if((discardedVal > cc1val) && (cc1val <= cc2val) && (cc1val <= cc3val)){  //if discard is > 1st card (and 1st card is the smallest), switch
+				var temp = discarded;
+				discarded = computecard[0];
+				computecard[0] = discarded;
+				document.getElementById("discard").innerHTML = imagePath(discarded);
+			}
+			else if((discardedVal > cc2val) && (cc2val <= cc1val) && (cc2val <= cc3val)){
+				var temp = discarded;
+				discarded = computecard[1];
+				computecard[1] = discarded;
+				document.getElementById("discard").innerHTML = imagePath(discarded);
+			}
+			else if((discardedVal > cc3val) && (cc3val <= cc1val) && (cc3val <= cc2val)){
+				var temp = discarded;
+				discarded = computecard[2];
+				computecard[2] = discarded;
+				document.getElementById("discard").innerHTML = imagePath(discarded);
+			}
+		}
+		else if(deckSuit === cc1suit){ //if same suit as deck card
+			if((deckVal > cc1val) && (cc1val <= cc2val) && (cc1val <= cc3val)){ //if deck card is > 1st card (and first card is the smallest), switch
+				var temp = computecard[0];
+				computecard[0] = deckTopCard;
+				discarded = temp;
+				document.getElementById("discard").innerHTML = imagePath(discarded);
+				deckTopCard = shuffleddeck[decklocation++]; //create new deck card
+			}
+			else if((deckVal > cc2val) && (cc2val <= cc1val) && (cc2val <= cc3val)){
+				var temp = computecard[1];
+				computecard[1] = deckTopCard;
+				discarded = temp;
+				document.getElementById("discard").innerHTML = imagePath(discarded);
+				deckTopCard = shuffleddeck[decklocation++];
+			}
+			else if((deckVal > cc3val) && (cc3val <= cc1val) && (cc3val <= cc2val)){
+				var temp = computecard[2];
+				computecard[2] = deckTopCard;
+				discarded = temp;
+				document.getElementById("discard").innerHTML = imagePath(discarded);
+				deckTopCard = shuffleddeck[decklocation++];
+			}
+		}
+	}
+
+	//		
+
 	console.log("beep boop i'm a computer playing a game");
 }
+/*~~~~~~~~~~~~~~~~~~~~~~~~~ END OF COMPUTER TURN ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 </SCRIPT>
 
