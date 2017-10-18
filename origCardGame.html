@@ -10,6 +10,9 @@ CS316 program 2
 Initial Author: Paul Piwowarski 2014/09
 Modifications: Paul Linton 2016/09
 Modifications: Paul Linton 2017/10
+
+REST OF PROGRAM COMPLETED BY: RUPAL SHAH
+
 */
 
 
@@ -92,39 +95,8 @@ function calculate(the_card, valueorsuit) {
 	}
 }
 
-function computescore(cards) {
-//	alert("computescore called");  // replace with actual code for computescore
-}
-
-function newcard(cards) {
-//	alert("newcard called");  // replace with actual code for newcard
-}
-
-function disableNewcard() {
-	theDeck = document.getElementById("xxxx");
-	thePile = document.getElementById("yyyy");
-
-	// something needs to go here.
-
-}
-function enableNewcard() {
-	theDeck = document.getElementById("deck");
-	thePile = document.getElementById("discard");
-
-	theDeck.onclick = SelectCard;
-	thePile.onclick = SelectCard;
-
-	console.log("End of enableNewcard()");
-}
-
-function ignoreClick(what) {
-	console.log("Something clicked "+what+", ignored!");
-}
 
 function SelectCard() {
-	console.log("beginning of SelectCard()");
-
-//	document.getElementById(this.id).style.border = "2px solid #42f450";
 
 	if(this.id === "deck"){
 		deckPileChoice = this.id;
@@ -220,7 +192,7 @@ function disableDiscardClick(){
 //returns image path of a given card 
 function imagePath(cardNumber){
 
-	return "<img src = '"+cardNumber+".png' />";;
+	return "<img src = '"+cardNumber+".png' />";
 
 }
 
@@ -270,6 +242,9 @@ function calculateScore(c1, c2, c3){
 
 /* MAIN FUNCTION */
 function start() {
+
+
+	console.log("BUTTON HAS BEEN PRESSED");	
 	
 	//if on the first round of a game, ask and output player's name
 	if(firstTurn){
@@ -288,10 +263,8 @@ function start() {
 	
 	document.getElementById("round").innerHTML = roundCount;
 
-	console.log("round: " + roundCount);
 	//output directions
-	/*TO DO: FIGURE OUT HOW TO FORCE USER TO ONLY CLICK DECK/DISCARD ONCE*/
-	document.getElementById("directions").innerHTML = "Select a card from the deck of the discard pile. CLICK HERE when you have chosen.";
+	document.getElementById("directions").innerHTML = "Select a card from the deck or the discard pile. CLICK HERE when you have chosen.";
 
 	disableHandClick();
 	enableDeckClick();
@@ -299,9 +272,6 @@ function start() {
 		
 
 	document.getElementById("directions").onclick = function(){	
-	console.log("final choice: " + deckPileChoice);
-		
-	
 
 		//if user clicked on deck, put card on discard pile and create new top card of deck
 		if(deckPileChoice === "deck"){
@@ -325,12 +295,7 @@ function start() {
 		enableHandClick(); //allow user to click on any card in their hand (card to discard)
 		
 		document.getElementById("directions").onclick = function(){
-			
-//			//if user clicks discard, do nothing
-//			if(deckPileChoice === "discard"){
-//				console.log("i'm doing nothing like i'm supposed to :-)");
-//			}
-			
+						
 			if(this.id === "discard"){
 				console.log("do nothing");
 			}			
@@ -375,9 +340,6 @@ function start() {
                 	document.getElementById("pc3").style.border = "2px solid #ffffff";
                 	document.getElementById("discard").style.border = "2px solid #ffffff";
 
-//			document.getElementById("directions").innerHTML = ""; //remove directions, so user cannot click on it after 3 rounds (until game is neset)
-			
-
 			//computer turn			
 			computerTurn();		
 	
@@ -386,7 +348,6 @@ function start() {
 			computerScore += calculateScore(computehand[0], computehand[1], computehand[2]);
 			
 			console.log("player cards: " + playerhand[0] + ", " + playerhand[1] + ", " + playerhand[2]);
-			console.log("player suits: " + calculate(playerhand[0], SUIT) + ", " + calculate(playerhand[1], SUIT) + ", " + calculate(playerhand[2], SUIT));
 			console.log("player score: " + playerScore);
 
 			console.log("computer cards: " + computehand[0] + ", " + computehand[1] + ", " + computehand[2]);
@@ -398,18 +359,23 @@ function start() {
 			if(gameCount <= 5){
 				roundCount++;
 				if(roundCount < 4){
-//					document.getElementById("playerscore").innerHTML = playerScore;
 					start();
 				
 				}
 				else{
-			
+
+					console.log("should be showing pics");
+					console.log(computehand[0]);
+					document.getElementById("cc1").innerHTML = "<img src = '" + computehand[0] + ".png' />";
+					document.getElementById("cc2").innerHTML = "<img src = '" + computehand[1] + ".png' />";
+					document.getElementById("cc3").innerHTML = "<img src = '" + computehand[2] + ".png' />";
+					
 					if(playerScore >= computerScore){
 						alert("You won!\nYour Score: " + playerScore + "\nComputer Score: " + computerScore); 
 						playerWin++;				
 					}					
 					else{
-						alert("You lost!\nYour Score: " + playerScore + "\nCompueter Score: " + computerScore);
+						alert("You lost!\nYour Score: " + playerScore + "\nComputer Score: " + computerScore);
 					}
 					
 					document.getElementById("game").innerHTML = playerWin + "/" + gameCount;
@@ -418,8 +384,6 @@ function start() {
 					disableDiscardClick();
 					disableHandClick();
 				
-		//			document.getElementById("playerscore").innerHTML = playerScore;
-
 					roundCount = 1;
 					decklocation = 0;
 					playerScore = 0;
@@ -436,9 +400,15 @@ function start() {
 			
 			}
 
-//			if(gameCount > 5){
-//				reset();
-//			}
+			if(gameCount > 5){
+				if(playerWin >= 3){
+					alert("YOU WON THE GAME! Well done!");
+				}
+				else{
+					alert("You lost :( Try again!");
+				}
+				reset();
+			}
 			
 	
 
@@ -449,7 +419,7 @@ function start() {
 				
 }
 
-/*
+
 function reset(){
 
 	firstTurn = true;
@@ -465,10 +435,11 @@ function reset(){
 	document.getElementById("playerscore").innerHTML = 0;
 	document.getElementById("round").innerHTML = 0;
 	document.getElementById("game").innerHTML = "0/0";
-
+	
+	deal();
 	start();
 
-}*/
+}
 
 // deal
 // start by dealing 3 cards to computer and you
@@ -853,7 +824,7 @@ function computerTurn(){
 <TABLE>
 	<TH STYLE="border: none; padding: 0in">
 		<P><INPUT TYPE=BUTTON VALUE="New Game" 
-			STYLE="width: 1.20in; height: 0.4in" ONCLICK="start();"> </P>
+			STYLE="width: 1.20in; height: 0.4in" ONCLICK="reset();"> </P>
 	</TH>
 <TABLE>
 	<TR>
