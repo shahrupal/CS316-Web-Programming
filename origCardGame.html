@@ -268,6 +268,9 @@ function start() {
 		var playerName = prompt("Please enter your name: ");
 		document.getElementById("thePlayer").innerHTML = playerName; 	
 
+		document.getElementById("playerscore").innerHTML = playerScore;
+		document.getElementById("computerscore").innerHTML = computerScore;
+
 		deal(); //deal new cards
 	
 	}
@@ -350,7 +353,7 @@ function start() {
 			}
 
 
-			document.getElementById("directions").innerHTML = ""; //remove directions, so user cannot click on it after 3 rounds (until game is reset)
+//			document.getElementById("directions").innerHTML = ""; //remove directions, so user cannot click on it after 3 rounds (until game is reset)
 			
 
 			//computer turn			
@@ -359,23 +362,26 @@ function start() {
 			playerScore += calculateScore(playerhand[0], playerhand[1], playerhand[2]);						
 			computerScore += calculateScore(computehand[0], computehand[1], computehand[2]);
 			
+			console.log("player cards: " + playerhand[0] + ", " + playerhand[1] + ", " + playerhand[2]);
+			console.log("player score: " + playerScore);
+
 			document.getElementById("playerscore").innerHTML = playerScore;	
 	
-			if(gameCount < 6){
+			if(gameCount <= 5){
 				roundCount++;
 				if(roundCount < 4){
-					document.getElementById("playerscore").innerHTML = playerScore;
+//					document.getElementById("playerscore").innerHTML = playerScore;
 					start();
 				
 				}
 				else{
 			
 					if(playerScore >= computerScore){
-						alert("You won!\nComputer Score: " + computerScore + "\nPlayer Score: " + playerScore); 
+						alert("You won!\nYour Score: " + playerScore + "\nComputer Score: " + computerScore); 
 						playerWin++;				
 					}					
 					else{
-						alert("You lost!\nComputer Score: " + computerScore + "\nPlayer Score: " + playerScore);
+						alert("You lost!\nYour Score: " + playerScore + "\nCompueter Score: " + computerScore);
 					}
 					
 					document.getElementById("game").innerHTML = playerWin + "/" + gameCount;
@@ -390,6 +396,10 @@ function start() {
 					decklocation = 0;
 					playerScore = 0;
 					computerScore = 0;
+
+					document.getElementById("playerscore").innerHTML = 0;
+					document.getElementById("computerscore").innerHTML = 0;
+
 					shuffle();
 					gameCount++;
 					deal();
@@ -397,8 +407,9 @@ function start() {
 				}
 			
 			}
-			//ELSE
-			//playerWin=0
+			
+	
+
  		}
 
 
@@ -406,6 +417,26 @@ function start() {
 				
 }
 
+/*
+function reset(){
+
+	firstTurn = true;
+
+	gameCount = 1;
+        roundCount = 1;
+        decklocation = 0;
+        playerScore = 0;
+        computerScore = 0;
+        playerWin = 0;
+
+	document.getElementById("computerscore").innerHTML = 0;
+	document.getElementById("playerscore").innerHTML = 0;
+	document.getElementById("round").innerHTML = 0;
+	document.getElementById("game").innerHTML = "0/0";
+
+	start();
+
+}*/
 
 // deal
 // start by dealing 3 cards to computer and you
