@@ -510,6 +510,23 @@ function deal() {
 //	document.getElementById("directions").innerHTML = "Select a new/discarded card";
 }
 
+//switches given card with discard card (used for computer's turn)
+function switchWithDiscard(cardNum){
+	var temp = discarded;
+        discarded = computehand[cardNum];
+        computehand[cardNum] = temp;
+        document.getElementById("discard").innerHTML = imagePath(discarded);
+}
+
+//puts given card in discard pile and puts deck card in place of given card (used for computer's turn)
+function switchWithDeck(cardNum){
+	var temp = computehand[cardNum];
+        computehand[cardNum] = deckTopCard;
+        discarded = temp;
+        document.getElementById("discard").innerHTML = imagePath(discarded);
+        deckTopCard = shuffleddeck[decklocation++]; //create new deck card
+}
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ COMPUTER TURN ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 function computerTurn(){ 
 	
@@ -535,45 +552,24 @@ function computerTurn(){
 	if((cc1suit === cc2suit) && (cc2suit === cc3suit)){
 		if(discardedSuit === cc1suit){  //if same suit as deck card
 			if((discardedVal > cc1val) && (cc1val <= cc2val) && (cc1val <= cc3val)){  //if discard is > 1st card (and 1st card is the smallest), switch
-				var temp = discarded;
-				discarded = computehand[0];
-				computehand[0] = temp;
-				document.getElementById("discard").innerHTML = imagePath(discarded);
+				switchWithDiscard(0);
 			}
 			else if((discardedVal > cc2val) && (cc2val <= cc1val) && (cc2val <= cc3val)){
-				var temp = discarded;
-				discarded = computehand[1];
-				computehand[1] = temp;
-				document.getElementById("discard").innerHTML = imagePath(discarded);
+				switchWithDiscard(1);
 			}
 			else if((discardedVal > cc3val) && (cc3val <= cc1val) && (cc3val <= cc2val)){
-				var temp = discarded;
-				discarded = computehand[2];
-				computehand[2] = temp;
-				document.getElementById("discard").innerHTML = imagePath(discarded);
+				switchWithDiscard(2);
 			}
 		}
 		else if(deckSuit === cc1suit){ //if same suit as deck card
 			if((deckVal > cc1val) && (cc1val <= cc2val) && (cc1val <= cc3val)){ //if deck card is > 1st card (and first card is the smallest), switch
-				var temp = computehand[0];
-				computehand[0] = deckTopCard;
-				discarded = temp;
-				document.getElementById("discard").innerHTML = imagePath(discarded);
-				deckTopCard = shuffleddeck[decklocation++]; //create new deck card
+				switchWithDeck(0);
 			}
 			else if((deckVal > cc2val) && (cc2val <= cc1val) && (cc2val <= cc3val)){
-				var temp = computehand[1];
-				computehand[1] = deckTopCard;
-				discarded = temp;
-				document.getElementById("discard").innerHTML = imagePath(discarded);
-				deckTopCard = shuffleddeck[decklocation++];
+				switchWithDeck(1);
 			}
 			else if((deckVal > cc3val) && (cc3val <= cc1val) && (cc3val <= cc2val)){
-				var temp = computehand[2];
-				computehand[2] = deckTopCard;
-				discarded = temp;
-				document.getElementById("discard").innerHTML = imagePath(discarded);
-				deckTopCard = shuffleddeck[decklocation++];
+				switchWithDeck(2);
 			}
 		}
 	}
@@ -582,47 +578,26 @@ function computerTurn(){
 	else if((cc1suit === cc2suit) || (cc1suit === cc3suit) || (cc2suit === cc3suit)){
 		if(cc1suit === cc2suit){
 			if(discardedSuit === cc1suit){ //if discard is same suit, switch with card that does not have same suit
-				var temp = discarded;
-				discarded = computehand[2];
-				computehand[2] = temp;
-				document.getElementById("discard").innerHTML = imagePath(discarded);
+				switchWithDiscard(2);
 			}
 			else if(deckSuit === cc1suit){ //otherwise if deck is samae suit, switch with card that does not have same suit
-				var temp = computehand[2];
-				computehand[2] = deckTopCard;
-				discarded = temp;
-				document.getElementById("discard").innerHTML = imagePath(discarded);
-				deckTopCard = shuffleddeck[decklocation++];
+				switchWithDeck(2);
 			}
 		}
 		else if(cc1suit === cc3suit){
 			if(discardedSuit === cc1suit){
-				var temp = discarded;
-				discarded = computehand[1];
-				computehand[1] = temp;
-				document.getElementById("discard").innerHTML = imagePath(discarded);
+				switchWithDiscard(1);
 			}
 			else if(deckSuit === cc1suit){ //otherwise if deck is samae suit, switch with card that does not have same suit
-                                var temp = computehand[1];
-                                computehand[1] = deckTopCard;
-                                discarded = temp;
-                                document.getElementById("discard").innerHTML = imagePath(discarded);
-                                deckTopCard = shuffleddeck[decklocation++];
+                        	switchWithDeck(1);
                         }
 		}	
 		else if(cc2suit === cc3suit){
 			if(discardedSuit === cc2suit){
-				var temp = discarded;
-				discarded = computehand[0];
-				computehand[0] = temp;
-				document.getElementById("discard").innerHTML = imagePath(discarded);
+				switchWithDiscard(0);
 			}
 			else if(deckSuit === cc1suit){ //otherwise if deck is samae suit, switch with card that does not have same suit
-                                var temp = computehand[0];
-                                computehand[0] = deckTopCard;
-                                discarded = temp;
-                                document.getElementById("discard").innerHTML = imagePath(discarded);
-                                deckTopCard = shuffleddeck[decklocation++];
+                                switchWithDeck(0);
                         }
 		}
 	}
@@ -636,36 +611,37 @@ function computerTurn(){
         else if((cc1val === cc2val) || (cc1val === cc3val) || (cc2val === cc3val)){
                 if(cc1val === cc2val){
                         if(discardedVal === cc1val){ //if discard is same suit, switch with card that does not have same suit
-                                var temp = discarded;
-                                discarded = computehand[2];
-                                computehand[2] = temp;
-                                document.getElementById("discard").innerHTML = imagePath(discarded);
+                                switchWithDiscard(2);
                         }
                         else if(deckVal === cc1val){ //otherwise if deck is samae suit, switch with card that does not have same suit
-                                var temp = computehand[2];
-                                computehand[2] = deckTopCard;
-                                discarded = temp;
-                                document.getElementById("discard").innerHTML = imagePath(discarded);
-                                deckTopCard = shuffleddeck[decklocation++];
+                                switchWithDeck(2);
                         }
                 }
 		else if(cc1val === cc3val){
                         if(discardedVal === cc1val){
-                                var temp = discarded;
-                                discarded = computehand[1];
-                                computehand[1] = temp;
-                                document.getElementById("discard").innerHTML = imagePath(discarded);
+                                switchWithDiscard(1);
                         }
                         else if(deckVal === cc1val){ //otherwise if deck is samae suit, switch with card that does not have same suit
-                                var temp = computehand[1];
-                                computehand[1] = deckTopCard;
-                                discarded = temp;
-                                document.getElementById("discard").innerHTML = imagePath(discarded);
-                                deckTopCard = shuffleddeck[decklocation++];
+                                switchWithDeck(1);
                         }
                 }
                 else if(cc2val === cc3val){
                         if(discardedVal === cc2val){
+                                switchWithDiscard(0);
+                        }
+                        else if(deckVal === cc1val){ //otherwise if deck is samae suit, switch with card that does not have same suit
+                                switchWithDeck(0);
+                        }
+                }
+        }                
+
+	//if two cards are in the set of (ace, 2, 3), attempt to draw the third card of the set
+/*	if((((cc1val === 1) || (cc2val === 1) || (cc3val === 1)) && ((cc1val === 2) || (cc2val === 2) || (cc3val === 2))) ||
+	   (((cc1val === 2) || (cc2val === 2) || (cc3val === 2)) && ((cc1val === 3) || (cc2val === 3) || (cc3val === 3))) ||
+	   (((cc1val === 1) || (cc2val === 1) || (cc3val === 1)) && ((cc1val === 3) || (cc3val === 3) || (cc3val === 3)))){
+		
+		if((cc1val === 1) && (cc2val === 2)){ //if the 1st card = ace, and 2nd = 2, look for 3 and switch w/ 3rd card
+			if(discardedVal === 3){
                                 var temp = discarded;
                                 discarded = computehand[0];
                                 computehand[0] = temp;
@@ -678,11 +654,11 @@ function computerTurn(){
                                 document.getElementById("discard").innerHTML = imagePath(discarded);
                                 deckTopCard = shuffleddeck[decklocation++];
                         }
-                }
-        }                
-
+		}
 		
 
+	} 	
+*/
 	console.log("beep boop i'm a computer playing a game");
 }
 /*~~~~~~~~~~~~~~~~~~~~~~~~~ END OF COMPUTER TURN ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
