@@ -31,14 +31,6 @@ fs.readFile(file, function(err, data){
 //rep = response
 http.createServer(function serveURL(req, rep){
 
-//	file = "advert.jpg";
-//	rep.end(temp);	
-
-//	fs.readFile(file, function(err, data){
-//		if(err) throw err;
-//		temp = data;
-//	});	
-
 	var inputURL = req.url;
 	console.log("URL Requested: " + inputURL);
 
@@ -48,24 +40,23 @@ http.createServer(function serveURL(req, rep){
 
 	if(inputURL.match(regex) == null){
 		console.log("false");
+		
 	}
 	else{
 	
 		var random = Math.floor(Math.random() * 3);
 		var checkExtension = inputURL.substring(inputURL.length - 3, inputURL.length); //stores extension
-		
+	
+		console.log("Random: " + random);	
+	
 		if(random === 2){
-			giveAdvert();
-			rep.end(temp);
+			giveAdvert(rep);
 		}
 		else if(checkExtension === "jpg"){
-			giveJPG("testjpg.jpg");
-			console.log("pls work i swear to god");
-			rep.end(temp);
+			giveJPG(inputURL.toString(), rep);
 		}
 		else if(checkExtension === "mp3"){
-			giveMP3(inputURL.toString());
-			rep.end(temp);
+			giveMP3(inputURL.toString(), rep);
 		}
 		
 		fs.readFile(file, function(err, data){
@@ -82,17 +73,23 @@ http.createServer(function serveURL(req, rep){
 }).listen(port, hostname);
 
 
-function giveAdvert(){
+function giveAdvert(rep){
 	file = "advert.jpg";
+	rep.setHeader('Content-Type', 'image/jpeg');
+	rep.end(temp);
 }
 
 
-function giveJPG(jpgFile){
+function giveJPG(jpgFile, rep){
 	file = jpgFile;
+	rep.setHeader('Content-Type', 'image/jpeg');
+	rep.end(temp);
 }
 
 
-function giveMP3(mp3File) {
+function giveMP3(mp3File, rep) {
 	file = mp3File;
+	rep.setHeader('Content-Type', 'audio/mpeg');
+	rep.end(temp);
 }
 
