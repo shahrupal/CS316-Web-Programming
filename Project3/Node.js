@@ -43,29 +43,48 @@ http.createServer(function serveURL(req, rep){
 		
 	}
 	else{
+
+		fs.exists(inputURL, function(exists){	
+
+			var random = Math.floor(Math.random() * 3);
+			var checkExtension = inputURL.substring(inputURL.length - 3, inputURL.length); //stores extension
 	
-		var random = Math.floor(Math.random() * 3);
-		var checkExtension = inputURL.substring(inputURL.length - 3, inputURL.length); //stores extension
-	
-		console.log("Random: " + random);	
-	
-		if(random === 2){
-			giveAdvert(rep);
-		}
-		else if(checkExtension === "jpg"){
-			giveJPG(inputURL.toString(), rep);
-		}
-		else if(checkExtension === "mp3"){
-			giveMP3(inputURL.toString(), rep);
-		}
-		
-		fs.readFile(file, function(err, data){
-			if(err) throw err;
-			temp = data;
+			console.log("Random: " + random);	
+
+			if(exists){  //if the input file exists
+
+				if(random === 2){  //outputs ad 33% of the time
+					giveAdvert(rep);
+				}
+				else if(checkExtension === "jpg"){ 
+					giveJPG(inputURL.toString(), rep);
+				}
+				else if(checkExtension === "mp3"){
+				giveMP3(inputURL.toString(), rep);
+				}
+			
+				fs.readFile(file, function(err, data){
+					if(err){
+						rep.write('403 ERROR: \n File not found.');
+						rep.end(temp);
+						console.log(err);
+					}
+					temp = data;
+				});
+
+			}
+			else{ //if the input file does not exist
+
+//				rep.writeHead(200, {'Content-Type':'text/plain'});
+				rep.write('403 ERROR:\nFile not found.');
+				console.log("pls");
+				rep.end();
+
+			}
 		});
 	}
 	
-
+	
 //	rep.write('boop');
 //	rep.end(temp);	    DOWNLOADS EVERY URL
 //	rep.end();
