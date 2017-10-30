@@ -21,12 +21,6 @@ var fs = require('fs');
 var temp;
 var file = "default.jpg";
 
-//opens specified file, throws error if file is nonexistent
-fs.readFile(file, function(err, data){
-	if(err) throw err;
-	temp = data;
-});
-
 //req = request
 //rep = response
 http.createServer(function serveURL(req, rep){
@@ -39,6 +33,7 @@ http.createServer(function serveURL(req, rep){
 	console.log("URL without /: " + inputURL);
 
 	if(inputURL.match(regex) == null){ //if URL does not match regular expression
+
 		rep.write('403 ERROR:\nInput not in correct format.\nMust only include letters, numbers, and underscores. Must also include .jpg or .mp3 extension.');
 		rep.end();
 		console.log("false");
@@ -67,19 +62,20 @@ http.createServer(function serveURL(req, rep){
 			
 				fs.readFile(file, function(err, data){
 					if(err){
-						rep.write('403 ERROR: \n File not found.');
+						rep.write('..........');
 						rep.end(temp);
 						console.log(err);
 					}
+//					rep.end(data);
 					temp = data;
 				});
+				
+				rep.end(temp);
 
 			}
 			else{ //if the input file does not exist
 
-//				rep.writeHead(200, {'Content-Type':'text/plain'});
 				rep.write('403 ERROR:\nFile not found.');
-				console.log("pls");
 				rep.end();
 
 			}
@@ -88,7 +84,7 @@ http.createServer(function serveURL(req, rep){
 	
 	
 //	rep.write('boop');
-//	rep.end(temp);	    DOWNLOADS EVERY URL
+//	rep.end(temp);	  
 //	rep.end();
 
 }).listen(port, hostname);
