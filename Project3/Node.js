@@ -38,7 +38,9 @@ http.createServer(function serveURL(req, rep){
 
 	console.log("URL without /: " + inputURL);
 
-	if(inputURL.match(regex) == null){
+	if(inputURL.match(regex) == null){ //if URL does not match regular expression
+		rep.write('403 ERROR:\nInput not in correct format.\nMust only include letters, numbers, and underscores. Must also include .jpg or .mp3 extension.');
+		rep.end();
 		console.log("false");
 		
 	}
