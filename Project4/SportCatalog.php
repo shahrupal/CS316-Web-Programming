@@ -20,15 +20,36 @@ foreach($json['sport'] as $mydata){
 	echo $mydata['title'];
 }
 
-//echo '<pre>'; print_r($json); echo '</pre>';
-//echo "My first PHP script!";
+echo '<pre>'; print_r($json); echo '</pre>';
 
 ?>
 
 <!-- drop-down list with all titles from .json file -->
-<select name="title">
-	<?php foreach($json['sport'] as $mydata){ ?>
-		<option><?php echo $mydata['title']; ?></option>
+<select>
+	<option>--Select Sport--</option>
+	<?php foreach($json['sport'] as $titlelist){ ?>
+		<option><?php echo $titlelist['title'];?></option>
+	<?php } ?>
+</select>
+
+<!-- drop-down list with all the results from .json file -->
+<select>
+	<option>--Select File--</option>
+	<?php foreach($json['sport'] as $resultlist){ ?>
+		<?php foreach($resultlist['results'] as $key=>$value){ ?>
+			<option><?php echo $key?></option>
+		<?php } ?>
+	<?php } ?>
+</select>
+
+
+<!-- drop-down list with all the searchterms from .json file -->
+<select>
+	<option>--Select Search Terms--</option>
+	<?php foreach($json['sport'] as $searchlist){ ?>
+		<?php foreach($searchlist['searchterms'] as $terms) { ?>
+			<option><?php echo $terms;?></option>
+		<?php } ?>
 	<?php } ?>
 </select>
 
