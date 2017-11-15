@@ -19,15 +19,15 @@ $json = json_decode($data, true);
 
 
 <?php
-if(isset($_GET['titlechoice']) && isset($_GET['resultchoice']) && isset($_GET['termchoice'])){
+// if the user enters required fields
+if(isset($_GET['titlechoice']) && !empty($_GET['titlechoice']) && isset($_GET['resultchoice']) && !empty($_GET['resultchoice']) && isset($_GET['termchoice'])){
 	
-	if(empty($_GET['titlechoice'] || empty($_GET['resultchoice']))){
-		echo "Must choose from Title and Result list.";
-	}
-	else{
-		echo $_GET['titlechoice'];
-      		echo "submitted";
-	}
+   	echo "submitted";
+
+}
+// if user does not enter required fields
+else if(empty($_GET['titlechoice']) || empty($_GET['resultchoice'])){
+	echo "Must choose from Title and Result list.";
 }
 else{
         echo "NOT SUBMITTED";
