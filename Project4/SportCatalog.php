@@ -21,10 +21,29 @@ $json = json_decode($data, true);
 <?php
 // if the user enters required fields
 if(isset($_GET['titlechoice']) && !empty($_GET['titlechoice']) && isset($_GET['resultchoice']) && !empty($_GET['resultchoice']) && isset($_GET['termchoice'])){
-	
-   	echo "submitted";
 
+	// search for user input for result and return key (.json file) associated with it
+	foreach($json['sport'] as $asport){
+		if($asport['title'] == $_GET['titlechoice']){
+			echo $asport['title'];
+			echo $_GET['titlechoice'];
+			foreach($asport['results'] as $key=>$value){ 
+				echo $resultlist;
+//				foreach($resultlist as $key=>$value){ 
+//					echo $key;
+	                		if($key == $_GET['resultchoice']){
+						echo $value;
+						$subdata = file_get_contents($value);
+						$subjson = json_decode($subdata,true);
+						echo $subdata;
+					}
+//				}
+                	}
+		}	
+	}
+	
 }
+
 // if user does not enter required fields
 else if(empty($_GET['titlechoice']) || empty($_GET['resultchoice'])){
 	echo "Must choose from Title and Result list.";
@@ -67,6 +86,7 @@ else{
 		<?php } ?>
 	</select>
 
+	
 
 	<!-- submit button -->
 	<input type="submit" value="submit">	
