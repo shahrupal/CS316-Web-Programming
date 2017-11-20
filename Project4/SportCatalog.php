@@ -1,3 +1,17 @@
+<!--
+Author: Rupal Shah
+Grading Rubric:
+a) implemented
+b) implemented
+c) implemented
+d) implemented
+e) implemented
+f) implemented
+BONUS:
+g) implemented
+-->
+
+
 <!DOCTYPE html>
 
 <html>
@@ -21,7 +35,7 @@ if(json_last_error() == 0){
 	inputValidation($json);
 }
 else{
-	echo "<p>ERROR: json file is invalid.</p>";
+	echo "<p>ERROR: json file is improper.</p>";
 }
 
 ?>
