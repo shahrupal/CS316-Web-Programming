@@ -25,23 +25,15 @@ if(isset($_GET['titlechoice']) && !empty($_GET['titlechoice']) && isset($_GET['r
 	// search for user input for result and return key (.json file) associated with it
 	foreach($json['sport'] as $asport){
 		if($asport['title'] == $_GET['titlechoice']){
-			echo $asport['title'];
-			echo $_GET['titlechoice'];
 			foreach($asport['results'] as $key=>$value){ 
-				echo $resultlist;
-//				foreach($resultlist as $key=>$value){ 
-//					echo $key;
-	                		if($key == $_GET['resultchoice']){
-						echo $value;
-						$subdata = file_get_contents($value);
-						$subjson = json_decode($subdata,true);
-						echo $subdata;
-					}
-//				}
+	                	if($key == $_GET['resultchoice']){
+			
+					showResults($value);
+
+				}
                 	}
 		}	
 	}
-	
 }
 
 // if user does not enter required fields
@@ -53,7 +45,31 @@ else{
 }
 ?>
 
+<?php
+function showResults($value){
+	$subdata = file_get_contents($value);
+	$subjson = json_decode($subdata, true);
+?>
+	<table width=100%>
+<?php	foreach($subjson['games'] as $components){
+		foreach($subjson['games'] as $games){
+?>
+			<tr>	
+<?php			foreach($games as $key=>$val){		
+?>				
+				<td><?php echo $key ?>:   <?php echo $val ?></td>    		
+	
+<?php			}
+?>
+			</tr>
+<?php	//		echo "</br>";
+		}
+?>	</table>
+<?php	break;
 
+	}
+
+} ?>
 
 <form action="" method="GET">
 
