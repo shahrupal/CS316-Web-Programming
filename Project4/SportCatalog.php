@@ -22,6 +22,7 @@ $json = json_decode($data, true);
 // if the user enters required fields
 if(isset($_GET['titlechoice']) && !empty($_GET['titlechoice']) && isset($_GET['resultchoice']) && !empty($_GET['resultchoice']) && isset($_GET['termchoice'])){
 
+	$combination = false;
 	// search for user input for result and return key (.json file) associated with it
 	foreach($json['sport'] as $asport){
 		if($asport['title'] == $_GET['titlechoice']){
@@ -33,8 +34,12 @@ if(isset($_GET['titlechoice']) && !empty($_GET['titlechoice']) && isset($_GET['r
 					else{
 						echo "<p>ERROR: file does not exist.</p>";
 					}
+					$combination = true;
 				}
                 	}
+			if(!isset($value) || empty($value) || ($combination == false)){
+				echo "<p>ERROR: this combination does not exist.</p>";
+			}
 		}	
 	}
 }
