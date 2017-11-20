@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
 <head>
 <title>Sports Information</title>
@@ -26,26 +27,37 @@ else{
 ?>
 
 
+<!--   INPUT VALIDATION FUNCTION  -->
 <?php
 function inputValidation($json){
 	
 	// if the user enters required fields
 	if(isset($_GET['titlechoice']) && !empty($_GET['titlechoice']) && isset($_GET['resultchoice']) && !empty($_GET['resultchoice']) && isset($_GET['termchoice'])){
+		// create boolean to store whether the inputted combination is valid
 		$combination = false;
-		// search for user input for result and return key (.json file) associated with it
+
+		// search for user input for result and pass key (.json file) associated with it to showResults function
 		foreach($json['sport'] as $asport){
 			if($asport['title'] == $_GET['titlechoice']){
 				foreach($asport['results'] as $key=>$value){ 
 		                	if($key == $_GET['resultchoice']){
+
+						// check if json file is valid
 						if(file_exists($value)){	
+	
+							// pass in new json file and search term selected by user
 							showResults($value,$_GET['termchoice']);
 						}
 						else{
 							echo "<p>ERROR: file does not exist.</p>";
 						}
+
+						// set valid combination to be true
 						$combination = true;
 					}
        		         	}
+
+				// output if combination is nonexistent					
 				if(!isset($value) || empty($value) || ($combination == false)){
 					echo "<p>ERROR: this combination does not exist.</p>";
 				}
@@ -64,23 +76,30 @@ function inputValidation($json){
 }
 ?>
 
+
 <!--   SHOW RESULTS FUNCTION   -->
 <?php
 function showResults($file,$search){
+
+	// store json information in string
 	$subdata = file_get_contents($file);
+
+	// store data in an array
 	$subjson = json_decode($subdata, true);
+
+	// create variables to store wins/losses data
 	$win = 0;
 	$loss = 0;
 	$total = 0;
 ?>
 
-<?php	if(json_last_error() != 0){
+<?php	// check if json file is valid
+	if(json_last_error() != 0){
 		echo "<p>ERROR: json file is improper.</p>";
 	}
 	else{
-?>
-		<h2><?php echo $search ?></h2>
-		<!-- SHOW COMMENTS -->
+?>		
+		<!-- SHOW COMMENTS AS HEADER -->
 		<h2>
 		<?php foreach($subjson['comments'] as $comments){
 			echo $comments;
@@ -88,7 +107,7 @@ function showResults($file,$search){
 		} ?>
 		</h2>
 	
-		<!-- SHOW GAMES -->
+		<!-- SHOW ALL GAME DATA -->
 		<table width=100%>
 	
 		<?php foreach($subjson['games'] as $games){ ?>
@@ -99,12 +118,12 @@ function showResults($file,$search){
 				<?php if(empty($search) || ($key != $search)){ ?>
 					<td><?php echo $key ?>:   <?php echo $val ?></td>    		
 				<?php }
-				// BOLD SEARCH TERMS
+				// <!-- BOLD SEARCH TERMS --> //
 				else{ ?>
 					<td><b><?php echo $key ?>:  <?php echo $val ?></b></td>
 				<?php } ?>
 	
-				<!-- WIN/LOSS PERCENTAGES -->
+				<!-- COUNT NUMBER OF WINS/LOSSES -->
 				<?php if($key == "WinorLose"){
 					if($val == "W"){
 						$win = $win + 1;
@@ -122,7 +141,7 @@ function showResults($file,$search){
 
 		</table>
 	
-		<!-- SUMMARY OF WINS/LOSSES -->
+		<!-- OUTPUT SUMMARY OF WINS/LOSSES -->
 		<h2>Games Won: <?php echo $win ?></h2>
 		<h2>Games Lost: <?php echo $loss ?></h2>
 		<h2>Total Number of Games Played: <?php echo $total ?></h2>
@@ -134,6 +153,8 @@ function showResults($file,$search){
 	<?php } ?>
 <?php } ?>
 
+
+<!-- CREATE HTML FORM -->
 <form action="" method="GET">
 
 	<!-- drop-down list with all titles from .json file -->
