@@ -5,7 +5,7 @@
 </head>
 <body>
 
-<h1>SPORTS!</h1>
+<h1>Sports Catalog!</h1>
 
 <?php
 
@@ -27,19 +27,21 @@ if(isset($_GET['titlechoice']) && !empty($_GET['titlechoice']) && isset($_GET['r
 		if($asport['title'] == $_GET['titlechoice']){
 			foreach($asport['results'] as $key=>$value){ 
 	                	if($key == $_GET['resultchoice']){
-			
-					showResults($value,$_GET['termchoice']);
-
+					if(file_exists($value)){	
+						showResults($value,$_GET['termchoice']);
+					}
+					else{
+						echo "<p>ERROR: file does not exist.</p>";
+					}
 				}
                 	}
 		}	
 	}
-
 }
 
 // if user does not enter required fields
 else if(empty($_GET['titlechoice']) || empty($_GET['resultchoice'])){
-	echo "Must choose from Title and Result list.";
+	echo "<p>REQUIRED: choose a title and result.</p>";
 }
 else{
         echo "NOT SUBMITTED";
@@ -58,12 +60,12 @@ function showResults($file,$search){
 
 	<h2><?phpecho $search ?></h2>
 	<!-- SHOW COMMENTS -->
-	<h1>
+	<h2>
 	<?php foreach($subjson['comments'] as $comments){
 		echo $comments;
 		echo " ";
 	} ?>
-	</h1>
+	</h2>
 
 	<!-- SHOW GAMES -->
 	<table width=100%>
@@ -98,9 +100,14 @@ function showResults($file,$search){
 	<?php } ?>
 
 	</table>
-
+	
+	<!-- SUMMARY OF WINS/LOSSES -->
+	<h2>Games Won: <?php echo $win ?></h2>
+	<h2>Games Lost: <?php echo $loss ?></h2>
+	<h2>Total Number of Games Played: <?php echo $total ?></h2>
 	<h2>% of Games Won: <?php echo round((100*$win/$total),2) ?></h2>
 	<h2>% of Games Lost: <?php echo round((100*$loss/$total),2) ?></h2>
+
 	<?php break;?>
 
 <?php } ?>
