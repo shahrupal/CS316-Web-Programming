@@ -51,6 +51,9 @@ else{
 function showResults($file,$search){
 	$subdata = file_get_contents($file);
 	$subjson = json_decode($subdata, true);
+	$win = 0;
+	$loss = 0;
+	$total = 0;
 ?>
 
 	<h2><?phpecho $search ?></h2>
@@ -78,12 +81,26 @@ function showResults($file,$search){
 				<td><b><?php echo $key ?>:  <?php echo $val ?></b></td>
 			<?php } ?>
 
-		<?php } ?>
-		</tr>
+			<!-- WIN/LOSS PERCENTAGES -->
+			<?php if($key == "WinorLose"){
+				if($val == "W"){
+					$win = $win + 1;
+				}
+				else{
+					$loss = $loss + 1;
+				}
+				$total = $total + 1;
+			}?>
 
+		<?php } ?>
+		</tr>		
+			
 	<?php } ?>
 
 	</table>
+
+	<h2>% of Games Won: <?php echo round((100*$win/$total),2) ?></h2>
+	<h2>% of Games Lost: <?php echo round((100*$loss/$total),2) ?></h2>
 	<?php break;?>
 
 <?php } ?>
