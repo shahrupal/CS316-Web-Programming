@@ -28,12 +28,13 @@ if(isset($_GET['titlechoice']) && !empty($_GET['titlechoice']) && isset($_GET['r
 			foreach($asport['results'] as $key=>$value){ 
 	                	if($key == $_GET['resultchoice']){
 			
-					showResults($value);
+					showResults($value,$_GET['termchoice']);
 
 				}
                 	}
 		}	
 	}
+
 }
 
 // if user does not enter required fields
@@ -45,31 +46,47 @@ else{
 }
 ?>
 
+<!--   SHOW RESULTS FUNCTION   -->
 <?php
-function showResults($value){
-	$subdata = file_get_contents($value);
+function showResults($file,$search){
+	$subdata = file_get_contents($file);
 	$subjson = json_decode($subdata, true);
 ?>
+
+	<h2><?phpecho $search ?></h2>
+	<!-- SHOW COMMENTS -->
+	<h1>
+	<?php foreach($subjson['comments'] as $comments){
+		echo $comments;
+		echo " ";
+	} ?>
+	</h1>
+
+	<!-- SHOW GAMES -->
 	<table width=100%>
-<?php	foreach($subjson['games'] as $components){
-		foreach($subjson['games'] as $games){
-?>
-			<tr>	
-<?php			foreach($games as $key=>$val){		
-?>				
+
+	<?php foreach($subjson['games'] as $games){ ?>
+
+		<tr>	
+		<?php foreach($games as $key=>$val){ ?>		
+			
+			<?php if(empty($search) || ($key != $search)){ ?>
 				<td><?php echo $key ?>:   <?php echo $val ?></td>    		
-	
-<?php			}
-?>
-			</tr>
-<?php	//		echo "</br>";
-		}
-?>	</table>
-<?php	break;
+			<?php }
+			// BOLD SEARCH TERMS
+			else{ ?>
+				<td><b><?php echo $key ?>:  <?php echo $val ?></b></td>
+			<?php } ?>
 
-	}
+		<?php } ?>
+		</tr>
 
-} ?>
+	<?php } ?>
+
+	</table>
+	<?php break;?>
+
+<?php } ?>
 
 <form action="" method="GET">
 
