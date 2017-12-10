@@ -4,38 +4,56 @@ require 'json'
 puts "Content-type: text/html"
 puts
 
-#json = File.read('Sports.json')
-#object = JSON.parse(json)
+puts "<html>"
+puts "<head>"
+puts "<title>Sports Catalog</title>"
+puts "</head>"
+puts "<body>"
+puts "<center><h1>Sports Catalog</h1></center>"
 
 file = open('Sports.json')
 theContents = file.read
 json = JSON.parse(theContents)
 
 
-#puts "<html><form action="" method="GET">"
+puts "<form action=''  method='GET'>"
 
-# creates drop-down list of titles
-puts "<select>"
-json["sport"].each do |list|
-	puts "<option>#{list["title"]}</option>"
-end
-puts "</select>"
+	puts "<center>"
 
-# creates drop-down list of results
-puts "<select>"
-json["sport"].each do |list|
-	list["results"].each do |results,files|
-		puts "<option>#{results}</option>"
+	# creates drop-down list of titles
+	puts "Title:"
+	puts "<select name='titlechoice'>"
+	json["sport"].each do |list|
+		puts "<option>#{list["title"]}</option>"
 	end
-end
-puts "</select>"
+	puts "</select>"
+	puts "</br>"
 
-# creates drop-down list of search terms
-puts "<select>"
-json["sport"].each do |list|
-	list["searchterms"].each do |terms|
-		puts "<option>#{terms}</option>"
+	# creates drop-down list of results
+	puts "Results:"
+	puts "<select name='resultchoice'>"
+	json["sport"].each do |list|
+		list["results"].each do |results,files|
+			puts "<option>#{results}</option>"
+		end
 	end
-end
-puts "</select>"
+	puts "</select>"
+	puts "</br>"
 
+	# creates drop-down list of search terms
+	puts "Search Terms:"
+	puts "<select name='termchoice'>"
+	json["sport"].each do |list|
+		list["searchterms"].each do |terms|
+			puts "<option>#{terms}</option>"
+		end
+	end
+	puts "</select>"
+	puts "</br>"
+
+	puts "</center>"
+
+puts "</form>"
+
+puts "</body>"
+puts "</html>"
