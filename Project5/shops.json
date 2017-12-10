@@ -1,0 +1,14 @@
+{
+	"shop" : {
+		"locations": {
+			"one": "Lexington",
+			"two": "Versailles",
+			"three": "Frankfort"
+		},
+		"id": [
+			"Lex001",
+			"Ver002",
+			"Fra003"
+		]
+	}
+}
