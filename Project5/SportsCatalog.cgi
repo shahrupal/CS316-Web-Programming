@@ -39,6 +39,24 @@ def showResults(file,searchterm)
 	end
 	puts "</h2>"
 
+	# show game data in table
+	puts "<table width=100%>"
+
+	subjson["games"].each do |games|	
+
+		puts "<tr>"
+		games.each do |key,value|
+
+			# if user does not specify search terms, no bolding
+			if searchterm == "" || key != searchterm
+				puts "<td>#{key}:   #{value}</td>"
+			end
+		end
+		puts "</tr>"
+
+	end
+	puts "</table>"
+
 end
 
 
