@@ -19,6 +19,30 @@ json = JSON.parse(theContents)
 cgi = CGI.new
 combination = false
 
+
+# searches json file associated with user input for information
+def showResults(file,searchterm)
+
+	subfile = open(file)
+	subcontents = subfile.read
+	subjson = JSON.parse(subcontents)
+
+	# create variables to store win/loss data
+	wins = 0
+	losses = 0
+	total = 0
+
+	# show comments as header
+	puts "<h2>"
+	subjson["comments"].each do |comments|
+		puts "#{comments}"
+	end
+	puts "</h2>"
+
+end
+
+
+
 # if user inputs something for title and results, search in json file
 if cgi['titlechoice'] != "" && cgi['resultchoice'] != ""
 	
@@ -34,7 +58,7 @@ if cgi['titlechoice'] != "" && cgi['resultchoice'] != ""
 					if !File.file?(files)
 						puts "Error: file does not exist."
 					else
-						showResults(files,cgi['termchoice'])
+						showResults(files,cgi["termchoice"])
 					end
 
 					# set valid combination of title and result to be true
@@ -49,9 +73,6 @@ if cgi['titlechoice'] != "" && cgi['resultchoice'] != ""
 	
 		end
 	end
-	
-def showResults()
-end
 
 else
 
