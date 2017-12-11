@@ -50,12 +50,30 @@ def showResults(file,searchterm)
 			# if user does not specify search terms, no bolding
 			if searchterm == "" || key != searchterm
 				puts "<td>#{key}:   #{value}</td>"
+			# bold search terms
+			else
+				puts "<td><b>#{key}:   #{value}</b></td>"  
+			end
+
+			# count number of wins/losses and total
+			if key == "WinorLose"
+				if value == "W"
+					wins = wins + 1
+				else
+					losses = losses + 1
+				end
+				total = total + 1
 			end
 		end
 		puts "</tr>"
 
 	end
 	puts "</table>"
+
+	# output summary of wins/losses
+	puts "<h3>Games Won: #{wins}  (#{(wins.to_f/total).round(3)*100.0}%)</h3>"
+	puts "<h3>Games Lost: #{losses}  (#{(losses.to_f/total).round(3)*100.0}%)</h3>"
+	puts "<h3>Total Number of Games: #{total}</h3>"
 
 end
 
