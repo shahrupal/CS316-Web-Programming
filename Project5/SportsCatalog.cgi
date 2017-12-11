@@ -1,4 +1,5 @@
 #!/usr/bin/ruby
+require 'cgi'
 require 'json'
 
 puts "Content-type: text/html"
@@ -15,45 +16,59 @@ file = open('Sports.json')
 theContents = file.read
 json = JSON.parse(theContents)
 
+cgi = CGI.new
 
-puts "<form action=''  method='GET'>"
+if cgi['titlechoice'] != "" && cgi['resultchoice'] != ""
+	puts "ayeeeee"
 
-	puts "<center>"
+	# puts "#{cgi['titlechoice']}" <-- prints out
 
-	# creates drop-down list of titles
-	puts "Title:"
-	puts "<select name='titlechoice'>"
-	json["sport"].each do |list|
-		puts "<option>#{list["title"]}</option>"
-	end
-	puts "</select>"
-	puts "</br>"
+else
 
-	# creates drop-down list of results
-	puts "Results:"
-	puts "<select name='resultchoice'>"
-	json["sport"].each do |list|
-		list["results"].each do |results,files|
-			puts "<option>#{results}</option>"
+	puts "<form action=''  method='GET'>"
+
+		puts "<center>"
+
+		# creates drop-down list of titles
+		puts "Title:"
+		puts "<select name='titlechoice'>"
+		puts "<option></option>"
+		json["sport"].each do |list|
+			puts "<option>#{list["title"]}</option>"
 		end
-	end
-	puts "</select>"
-	puts "</br>"
+		puts "</select>"
+		puts "</br>"
 
-	# creates drop-down list of search terms
-	puts "Search Terms:"
-	puts "<select name='termchoice'>"
-	json["sport"].each do |list|
-		list["searchterms"].each do |terms|
-			puts "<option>#{terms}</option>"
+		# creates drop-down list of results
+		puts "Results:"
+		puts "<select name='resultchoice'>"
+		puts "<option></option>"
+		json["sport"].each do |list|
+			list["results"].each do |results,files|
+				puts "<option>#{results}</option>"
+			end
 		end
-	end
-	puts "</select>"
-	puts "</br>"
+		puts "</select>"
+		puts "</br>"
 
-	puts "</center>"
+		# creates drop-down list of search terms
+		puts "Search Terms:"
+		puts "<select name='termchoice'>"
+		puts "<option></option>"
+		json["sport"].each do |list|
+			list["searchterms"].each do |terms|
+				puts "<option>#{terms}</option>"
+			end
+		end
+		puts "</select>"
+		puts "</br>"
 
-puts "</form>"
+		# creates submit button
+		puts "<input type='submit' value='submit'>"
 
+		puts "</center>"
+
+	puts "</form>"
+end
 puts "</body>"
 puts "</html>"
