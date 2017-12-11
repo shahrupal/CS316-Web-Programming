@@ -17,11 +17,41 @@ theContents = file.read
 json = JSON.parse(theContents)
 
 cgi = CGI.new
+combination = false
 
+# if user inputs something for title and results, search in json file
 if cgi['titlechoice'] != "" && cgi['resultchoice'] != ""
-	puts "ayeeeee"
+	
+	# search for matching title
+	json["sport"].each do |list|
+		if list["title"] == cgi["titlechoice"]
+			
+			# search for matching results
+			list["results"].each do |results,files|
+				if results == cgi["resultchoice"]
+				
+					# check if json file exists
+					if !File.file?(files)
+						puts "Error: file does not exist."
+					else
+						showResults(files,cgi['termchoice'])
+					end
 
-	# puts "#{cgi['titlechoice']}" <-- prints out
+					# set valid combination of title and result to be true
+					combination = true	
+				end					
+			end
+		
+			# if combination is not valid or no json file associated with combination
+			if combination == false || files == ""
+				puts "Error: this combination does not exist."
+			end
+	
+		end
+	end
+	
+def showResults()
+end
 
 else
 
@@ -40,7 +70,7 @@ else
 		puts "</br>"
 
 		# creates drop-down list of results
-		puts "Results:"
+		puts "Result:"
 		puts "<select name='resultchoice'>"
 		puts "<option></option>"
 		json["sport"].each do |list|
@@ -52,7 +82,7 @@ else
 		puts "</br>"
 
 		# creates drop-down list of search terms
-		puts "Search Terms:"
+		puts "Search Term:"
 		puts "<select name='termchoice'>"
 		puts "<option></option>"
 		json["sport"].each do |list|
@@ -65,10 +95,13 @@ else
 
 		# creates submit button
 		puts "<input type='submit' value='submit'>"
+	
+		puts "</br>*title and result field are required</br>"
 
 		puts "</center>"
 
 	puts "</form>"
+
 end
 puts "</body>"
 puts "</html>"
